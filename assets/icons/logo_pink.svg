@@ -4,9 +4,9 @@
     <title>Combined Shape</title>
     <desc>Created with Sketch.</desc>
     <defs>
-        <linearGradient x1="100%" y1="100%" x2="0%" y2="0%" id="linearGradient-1">
-            <stop stop-color="#0089FF" offset="0%"></stop>
-            <stop stop-color="#02DEF2" offset="100%"></stop>
+        <linearGradient x1="100%" y1="100%" x2="38.1041974%" y2="38.1041974%" id="linearGradient-1">
+            <stop stop-color="#FFC83E" offset="0%"></stop>
+            <stop stop-color="#FA709A" offset="100%"></stop>
         </linearGradient>
     </defs>
     <g id="logo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

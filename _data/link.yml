@@ -1,8 +1,0 @@
-links:
-  - name: Accessible
-    link: xxxxxxxxxxxxxxxxxx.xxx
-    status: true
-
-  - name: Inaccessible
-    link: xxxxxxx.xxxx
-    status: false

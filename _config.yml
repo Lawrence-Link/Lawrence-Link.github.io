@@ -58,6 +58,8 @@ postPatterns: 'ticTacToe'
 sns:
   QQ: '//qm.qq.com/cgi-bin/qm/qr?k=j0v21hVtSQf1Et4EUoWJkzFlCZcXk6nR&jump_from=webapi'
   github: '//github.com/Lawrence-Link'
+  twitter: '//https://twitter.com/linkalreadytake?t=-S-QX3isOAnuFLSsc189Lw&s=09'
+  
 
 # Tags 设置标签
 recommend-tags: true # whether or not display recommend-tags on the sidebar

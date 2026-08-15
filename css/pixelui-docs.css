@@ -28,8 +28,33 @@
   margin-right: 5px;
 }
 
+.pixelui-language-switch {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  margin-left: auto;
+  padding-left: 10px;
+  border-left: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+.pixelui-language-switch a,
+.pixelui-language-switch span {
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 0;
+}
+
+.pixelui-language-switch span[aria-current='page'] {
+  color: #fff;
+  background: #1677a7;
+}
+
 @media screen and (max-width: 768px) {
   .pixelui-docs-nav {
     margin-bottom: 18px;
+  }
+
+  .pixelui-language-switch {
+    margin-left: 4px;
   }
 }

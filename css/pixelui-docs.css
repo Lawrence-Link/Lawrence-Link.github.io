@@ -1,0 +1,35 @@
+.pixelui-docs-nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 24px;
+  padding: 0 0 14px;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  scrollbar-width: thin;
+}
+
+.pixelui-docs-nav a {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+  color: var(--font-color);
+  line-height: 1.2;
+}
+
+.pixelui-docs-nav a:hover,
+.pixelui-docs-nav a:focus-visible {
+  border-color: #49b1f5;
+  color: #49b1f5;
+}
+
+.pixelui-docs-nav i {
+  margin-right: 5px;
+}
+
+@media screen and (max-width: 768px) {
+  .pixelui-docs-nav {
+    margin-bottom: 18px;
+  }
+}

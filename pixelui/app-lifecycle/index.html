@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Application Lifecycle and ViewManager / App 生命周期与页面栈 | Linked &gt;&gt; Blog</title><meta name="author" content="Link0327"><meta name="copyright" content="Link0327"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文档首页   快速开始   架构   生命周期   GitHub   ViewManager 管理一个LIFO的 App 栈。栈底 App 不会因为打开了新 App 而销毁，只会暂停。 上半部是 push：B 先在 arena 中构造，等 fade 完成后才调 onEnter()。下半部是 pop：先执行退出回调和非拥有引用清理，再销毁 B 并恢复 A。 12push B:  A.onP">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Application Lifecycle and ViewManager &#x2F; App 生命周期与页面栈">
+<meta property="og:url" content="https://lawrence-link.github.io/pixelui/app-lifecycle/index.html">
+<meta property="og:site_name" content="Linked &gt;&gt; Blog">
+<meta property="og:description" content="文档首页   快速开始   架构   生命周期   GitHub   ViewManager 管理一个LIFO的 App 栈。栈底 App 不会因为打开了新 App 而销毁，只会暂停。 上半部是 push：B 先在 arena 中构造，等 fade 完成后才调 onEnter()。下半部是 pop：先执行退出回调和非拥有引用清理，再销毁 B 并恢复 A。 12push B:  A.onP">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lawrence-link.github.io/img/avatar.png">
+<meta property="article:published_time" content="2026-08-15T16:16:55.257Z">
+<meta property="article:modified_time" content="2026-08-15T16:16:55.257Z">
+<meta property="article:author" content="Link0327">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lawrence-link.github.io/img/avatar.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://lawrence-link.github.io/pixelui/app-lifecycle/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Application Lifecycle and ViewManager / App 生命周期与页面栈',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/pixelui-docs.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.png" alt="Logo"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">Application Lifecycle and ViewManager / App 生命周期与页面栈</h1></header><main class="layout" id="content-inner"><div id="page"><div class="page-title">Application Lifecycle and ViewManager / App 生命周期与页面栈</div><div class="container" id="article-container"><!-- Generated by npm run sync:pixelui-docs. Edit PixelUI.wiki instead. -->
+
+<nav class="pixelui-docs-nav" aria-label="PixelUI documentation">
+  <a href="/pixelui/"><i class="fas fa-book"></i>文档首页</a>
+  <a href="/pixelui/quick-start/"><i class="fas fa-bolt"></i>快速开始</a>
+  <a href="/pixelui/architecture/"><i class="fas fa-diagram-project"></i>架构</a>
+  <a href="/pixelui/app-lifecycle/"><i class="fas fa-layer-group"></i>生命周期</a>
+  <a href="https://github.com/Lawrence-Link/PixelUI" target="_blank" rel="noopener"><i class="fab fa-github"></i>GitHub</a>
+</nav>
+
+<p><code>ViewManager</code> 管理一个LIFO的 App 栈。栈底 App 不会因为打开了新 App 而销毁，只会暂停。</p>
+<p><img src="/pixelui/images/app_lifecycle.png"><br><em>上半部是 push：B 先在 arena 中构造，等 fade 完成后才调 <code>onEnter()</code>。下半部是 pop：先执行退出回调和非拥有引用清理，再销毁 B 并恢复 A。</em></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">push B:  A.onPause() -&gt; B 变为当前的drawable -&gt; fade动画 -&gt; B.onEnter()</span><br><span class="line">pop B:   B.onExit()  -&gt; 清理引用 -&gt; B 析构 -&gt; A.onResume()</span><br></pre></td></tr></table></figure>
+
+<h2 id="启动方式"><a href="#启动方式" class="headerlink" title="启动方式"></a>启动方式</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> result = views.<span class="built_in">launch</span>(appItem, parameters);</span><br><span class="line"><span class="keyword">auto</span> direct = views.<span class="built_in">push</span>&lt;MyApp&gt;(ui, parameters);</span><br></pre></td></tr></table></figure>
+
+<p><code>launch()</code> 用 <code>AppItem</code> 中的 factory，适合 AppLauncher 和注册系统。<code>push&lt;T&gt;()</code> 直接转发构造参数，适合已知具体类型的内部导航。</p>
+<h2 id="LaunchResult"><a href="#LaunchResult" class="headerlink" title="LaunchResult"></a>LaunchResult</h2><table>
+<thead>
+<tr>
+<th>结果</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Ok</code></td>
+<td>App 已构造并提交到栈</td>
+</tr>
+<tr>
+<td><code>StackFull</code></td>
+<td>已达 <code>PIXELUI_MAX_VIEW_DEPTH</code></td>
+</tr>
+<tr>
+<td><code>ArenaFull</code></td>
+<td>页面数未满，但 App 对象字节和对齐填充已放不下</td>
+</tr>
+<tr>
+<td><code>ConstructionFailed</code></td>
+<td>factory 不能构造对象</td>
+</tr>
+<tr>
+<td><code>TransitionInProgress</code></td>
+<td>正在页面提交或等待 fade 完成</td>
+</tr>
+</tbody></table>
+<p>容量失败是正常可观测结果，不应该被忽略。</p>
+<h2 id="不允许嵌套导航"><a href="#不允许嵌套导航" class="headerlink" title="不允许嵌套导航"></a>不允许嵌套导航</h2><p><code>onEnter()</code>、<code>onExit()</code>、<code>onPause()</code>、<code>onResume()</code>、App 构造&#x2F;析构以及导航输入中，不能同步再次 push&#x2F;pop。ViewManager 使用 transition guard 稳定地拒绝嵌套请求，而不是在半完成的栈上继续操作。</p>
+<p>如果生命周期回调需要去另一页，记录一个 pending action，在当前调用栈返回后由主循环执行。</p>
+<h2 id="fade-动画与-onEnter"><a href="#fade-动画与-onEnter" class="headerlink" title="fade 动画与 onEnter"></a>fade 动画与 onEnter</h2><p>从已显示 App push 新 App 时，新 App 先进入 <code>m_pendingEnter</code>。<code>renderer()</code> 继续推进 fade，最后一帧完成后才调用 <code>onEnter()</code>。这保证新 App 不会在上一页还可见时提前发布 Widget、Popup 或动画。</p>
+<p><code>isTransitioning()</code> 在等待 fade 时也返回 true，但 renderer 只会被短暂的 commit guard 挡住，否则 fade 自己会永远无法完成。</p>
+<h2 id="销毁前的清理"><a href="#销毁前的清理" class="headerlink" title="销毁前的清理"></a>销毁前的清理</h2><p>ViewManager 在 pop 时清理 drawable、exit callback、动画、Coroutine、Focus 和 Popup 引用，然后调用具体 App 析构函数并回滚 arena marker。App 查询得到的 <code>IApplication*</code> 不能跨过 pop 保存。</p>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Link0327</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Lawrence-Link"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Lawrence-Link" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:lawrence-link@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">启动方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LaunchResult"><span class="toc-number">2.</span> <span class="toc-text">LaunchResult</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%85%81%E8%AE%B8%E5%B5%8C%E5%A5%97%E5%AF%BC%E8%88%AA"><span class="toc-number">3.</span> <span class="toc-text">不允许嵌套导航</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fade-%E5%8A%A8%E7%94%BB%E4%B8%8E-onEnter"><span class="toc-number">4.</span> <span class="toc-text">fade 动画与 onEnter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%80%E6%AF%81%E5%89%8D%E7%9A%84%E6%B8%85%E7%90%86"><span class="toc-number">5.</span> <span class="toc-text">销毁前的清理</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/29/26may29-future-of-pixelui/" title="The Future of the PixelUI beta"><img src="/img/bg_01.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="The Future of the PixelUI beta"/></a><div class="content"><a class="title" href="/2026/05/29/26may29-future-of-pixelui/" title="The Future of the PixelUI beta">The Future of the PixelUI beta</a><time datetime="2026-05-29T01:17:52.153Z" title="Created 2026-05-29 09:17:52">2026-05-29</time></div></div></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>Archives</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/05/">
+            <span class="card-archive-list-date">
+              May 2026
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">1</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-08-15T16:17:32.645Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Link0327</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Toggle Between Traditional and Simplified Chinese">繁</button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="/js/tw_cn.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

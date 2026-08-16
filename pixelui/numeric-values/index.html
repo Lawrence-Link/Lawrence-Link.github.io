@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Numeric Values / 通用数值层 | Linked &gt;&gt; Blog</title><meta name="author" content="Link0327"><meta name="copyright" content="Link0327"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文档首页   快速开始   架构   生命周期   GitHub   中文English   PixelUI 将数值状态、编辑事务、显示格式和组件绘制拆开。共用数值层只使用 int32_t、固定容量存储和整数运算。 范围与归一化通过校验工厂创建 NumericRange： 1234NumericRange range;if (!NumericRange::tryCreate(-40, 1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Numeric Values &#x2F; 通用数值层">
+<meta property="og:url" content="https://me0w.org/pixelui/numeric-values/index.html">
+<meta property="og:site_name" content="Linked &gt;&gt; Blog">
+<meta property="og:description" content="文档首页   快速开始   架构   生命周期   GitHub   中文English   PixelUI 将数值状态、编辑事务、显示格式和组件绘制拆开。共用数值层只使用 int32_t、固定容量存储和整数运算。 范围与归一化通过校验工厂创建 NumericRange： 1234NumericRange range;if (!NumericRange::tryCreate(-40, 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://me0w.org/img/avatar.png">
+<meta property="article:published_time" content="2026-08-16T16:19:51.237Z">
+<meta property="article:modified_time" content="2026-08-16T16:19:51.237Z">
+<meta property="article:author" content="Link0327">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://me0w.org/img/avatar.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://me0w.org/pixelui/numeric-values/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Numeric Values / 通用数值层',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/pixelui-docs.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.png" alt="Logo"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">Numeric Values / 通用数值层</h1></header><main class="layout" id="content-inner"><div id="page"><div class="page-title">Numeric Values / 通用数值层</div><div class="container" id="article-container"><!-- Generated by npm run docs:sync. Edit docs/pixelui instead. -->
+
+<nav class="pixelui-docs-nav" aria-label="PixelUI documentation">
+  <a href="/pixelui/"><i class="fas fa-book"></i>文档首页</a>
+  <a href="/pixelui/quick-start/"><i class="fas fa-bolt"></i>快速开始</a>
+  <a href="/pixelui/architecture/"><i class="fas fa-diagram-project"></i>架构</a>
+  <a href="/pixelui/app-lifecycle/"><i class="fas fa-layer-group"></i>生命周期</a>
+  <a href="https://github.com/Lawrence-Link/PixelUI" target="_blank" rel="noopener"><i class="fab fa-github"></i>GitHub</a>
+  <div class="pixelui-language-switch" aria-label="语言"><span aria-current="page">中文</span><a href="/en/pixelui/numeric-values/">English</a></div>
+</nav>
+
+<p>PixelUI 将数值状态、编辑事务、显示格式和组件绘制拆开。共用数值层只使用 <code>int32_t</code>、固定容量存储和整数运算。</p>
+<h2 id="范围与归一化"><a href="#范围与归一化" class="headerlink" title="范围与归一化"></a>范围与归一化</h2><p>通过校验工厂创建 <code>NumericRange</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NumericRange range;</span><br><span class="line"><span class="keyword">if</span> (!NumericRange::tryCreate(<span class="number">-40</span>, <span class="number">120</span>, <span class="number">5</span>, range)) &#123;</span><br><span class="line">    <span class="comment">// minimum &gt; maximum，或 step &lt;= 0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>clamp()</code>、<code>canIncrement()</code>、<code>canDecrement()</code>、<code>incremented()</code> 和 <code>decremented()</code> 都采用饱和语义。step 不能整除范围时，最后一步直接落到边界。<code>normalizeToExtent(range, value, pixels)</code> 把 clamp 后的值映射为整数像素长度，舍入规则是最接近整数。整个 <code>INT32_MIN</code> 到 <code>INT32_MAX</code> 范围都不会先溢出再 clamp。</p>
+<p><code>tryCreate()</code> 在 <code>minimum &gt; maximum</code> 或 <code>step &lt;= 0</code> 时返回 <code>false</code>，并保持输出对象不变。保存或传递 Range 之前必须检查这个结果。</p>
+<h2 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h2><p><code>NumericFormatter</code> 格式化调用时传入的值，不拥有也不读取 App 状态。内置策略包括普通整数、补零、缩放整数、后缀和百分比：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IntegerFormat padded&#123;<span class="number">3</span>, <span class="literal">nullptr</span>&#125;;</span><br><span class="line">NumericFormatter digits = NumericFormatter::<span class="built_in">integer</span>(padded); <span class="comment">// -7 -&gt; &quot;-007&quot;</span></span><br><span class="line"></span><br><span class="line">ScaledIntegerFormat volts&#123;<span class="number">10</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="string">&quot; V&quot;</span>&#125;;</span><br><span class="line">NumericFormatter voltage = NumericFormatter::<span class="built_in">scaled</span>(volts);  <span class="comment">// -7 -&gt; &quot;-0.7 V&quot;</span></span><br><span class="line"></span><br><span class="line">PercentageFormat percentage&#123;&amp;range, <span class="string">&quot;%&quot;</span>&#125;;</span><br><span class="line">NumericFormatter percent = NumericFormatter::<span class="built_in">percentage</span>(percentage);</span><br></pre></td></tr></table></figure>
+
+<p>格式化过程不分配内存。Formatter 无效或目标缓冲区不足时，<code>format()</code> 返回 <code>false</code>；只要缓冲区非空，失败后首字节会被置为 <code>\0</code>。拼接 <code>current/total</code> 这类文本时使用 <code>FixedBufferWriter::appendInteger()</code>，不要另写一套整数转换。</p>
+<p>Formatter 只保存函数指针和非拥有 context 指针。它引用的 format 配置、suffix 字符串、百分比 range 或自定义 context，必须比所有 <code>format()</code> 调用活得更久。局部 Formatter 可用于立即格式化；被 Widget 保存或随 Popup 排队的 Formatter 必须引用静态存储或持久的 App 成员。</p>
+<p>持久依赖应声明在 Formatter 之前，确保成员按反向顺序析构时依赖仍然有效：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NumericRange temperatureRange_&#123;&#125;;</span><br><span class="line">ScaledIntegerFormat temperatureFormat_&#123;<span class="number">10</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="string">&quot; C&quot;</span>&#125;;</span><br><span class="line">NumericFormatter temperatureFormatter_ =</span><br><span class="line">    NumericFormatter::<span class="built_in">scaled</span>(temperatureFormat_);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Binding-与编辑事务"><a href="#Binding-与编辑事务" class="headerlink" title="Binding 与编辑事务"></a>Binding 与编辑事务</h2><p><code>ValueEditorBinding</code> 只定义非拥有的 read&#x2F;write&#x2F;notify 边界。<code>ValueEditSession</code> 才保存 original value、draft value 和编辑策略。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">changed</span><span class="params">(<span class="type">void</span>* context, <span class="type">int32_t</span> value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static_cast</span>&lt;Settings*&gt;(context)-&gt;brightness = value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ValueEditorBinding binding =</span><br><span class="line">    ValueEditorBinding::<span class="built_in">reference</span>(brightness_, &amp;changed, <span class="keyword">this</span>);</span><br><span class="line"><span class="function">ValueEditSession <span class="title">edit</span><span class="params">(binding, ValueEditPolicy::CommitOnConfirm)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>CommitOnConfirm</code> 下，draft 只存在 Session 中；<code>commit()</code> 才写回并通知，<code>cancel()</code> 直接丢弃 draft。<code>Live</code> 下，每次成功的 <code>setDraftValue()</code> 都立即写回并通知；<code>cancel()</code> 会恢复 original value，并通知这次恢复。只用初始整数构造的 Session 没有外部 Binding，但仍走相同的 draft&#x2F;commit&#x2F;cancel 路径。</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th><code>CommitOnConfirm</code></th>
+<th><code>Live</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>setDraftValue(value)</code></td>
+<td>只更新 draft</td>
+<td>先写回、通知，再更新 draft</td>
+</tr>
+<tr>
+<td><code>commit()</code></td>
+<td>值有变化时写回并通知；把 draft 设为新的 original</td>
+<td>把当前 draft 设为新的 original</td>
+</tr>
+<tr>
+<td><code>cancel()</code></td>
+<td>丢弃 draft</td>
+<td>值有变化时恢复并通知 original value</td>
+</tr>
+</tbody></table>
+<p>Session 无效或必要写入失败时，这三个操作都会返回 <code>false</code>。写入失败不会推进事务状态；调用者应保持编辑器打开，或用 <code>draftValue()</code> 恢复可见控件。</p>
+<p>Binding 的 value context 和 changed context 都是非拥有的，必须覆盖 Session 及其全部操作的寿命。Popup 请求复制 Binding 后，这项要求会延长到 pending 排队期和 active 显示期全部结束。</p>
+<h2 id="组件职责"><a href="#组件职责" class="headerlink" title="组件职责"></a>组件职责</h2><ul>
+<li><code>NumScroll</code> 用 <code>NumericRange</code> 步进，用 <code>NumericFormatter</code> 生成文字。使用 <code>setRange(min, max, step)</code> 或 <code>setRange(range)</code>，再用 <code>setFormatter(formatter)</code> 配置显示。补零属于 Formatter 策略；<code>setFixedIntDigits()</code> 已删除。</li>
+<li><code>PopupProgress</code> 的 LEFT&#x2F;RIGHT 使用 <code>range.step()</code>，进度条几何单独做整数归一化，显示文字完全由 Formatter 决定。</li>
+<li><code>PopupValueDigits</code> 使用 <code>ValueEditSession</code>；构造不会修改外部值。数字位上的 SELECT 只结束该位的局部编辑，之后仍可修改其他位。OK 提交整个 Session；CANCEL 或 BACK 取消。</li>
+</ul>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Link0327</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Lawrence-Link"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Lawrence-Link" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:lawrence-link@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8C%83%E5%9B%B4%E4%B8%8E%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">范围与归一化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">格式化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Binding-%E4%B8%8E%E7%BC%96%E8%BE%91%E4%BA%8B%E5%8A%A1"><span class="toc-number">3.</span> <span class="toc-text">Binding 与编辑事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E8%81%8C%E8%B4%A3"><span class="toc-number">4.</span> <span class="toc-text">组件职责</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/29/26may29-future-of-pixelui/" title="The Future of the PixelUI beta"><img src="/img/bg_01.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="The Future of the PixelUI beta"/></a><div class="content"><a class="title" href="/2026/05/29/26may29-future-of-pixelui/" title="The Future of the PixelUI beta">The Future of the PixelUI beta</a><time datetime="2026-05-29T01:17:52.153Z" title="发表于 2026-05-29 09:17:52">2026-05-29</time></div></div></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/05/">
+            <span class="card-archive-list-date">
+              五月 2026
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">1</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-08-16T16:20:49.860Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Link0327</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="/js/tw_cn.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

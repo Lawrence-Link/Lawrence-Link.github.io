@@ -2,7 +2,7 @@
   const friends = [
     { name: '比格/Bigsk', url: 'https://blog.ianxia.com', icon: '/img/friendslink/bigsk.webp' },
     { name: '不大水龙', url: 'https://isluohui.netlify.app', icon: '/img/friendslink/budashuilong.png' },
-    { name: '哈基猪', url: 'https://g-bot.cn', icon: '/img/friendslink/hajinuo.png' },
+    { name: '星诺', url: 'https://q-bot.cn', icon: '/img/friendslink/hajinuo.png' },
     { name: '洺渊', url: 'https://blog.fmyron.com', icon: '/img/friendslink/mingyuan.jpg' },
     { name: '猫喵', url: 'https://me0w.cat/', icon: '/img/friendslink/maomiao.jpg' },
     { name: 'wildcreator', url: 'https://wildcreator.top/', icon: '/img/friendslink/wildcreator.jpg' },

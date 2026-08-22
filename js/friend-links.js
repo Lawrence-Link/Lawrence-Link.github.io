@@ -7,7 +7,7 @@
     { name: '猫喵', url: 'https://me0w.cat/', icon: '/img/friendslink/maomiao.jpg' },
     { name: 'wildcreator', url: 'https://wildcreator.top/', icon: '/img/friendslink/wildcreator.jpg' },
     { name: 'x1193', url: 'http://x1193.wikidot.com', icon: '/img/friendslink/X1193.png' },
-    { name: '渣渣120', url: 'https://zhazha120.cn', icon: '/img/friendslink/zhazha120.jpg' }
+    { name: '渣渣120', url: 'https://zhazha120.cn', icon: '/img/friendslink/zhazha120.png' }
   ]
 
   const isHome = () => location.pathname === '/' || location.pathname === '/index.html'

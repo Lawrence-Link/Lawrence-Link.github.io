@@ -56,6 +56,53 @@ export const getTag = (metadata, names) => {
   return match?.[1] ?? null
 }
 
+const dimensionValue = value => {
+  const candidate = Array.isArray(value) ? value[0] : value
+  const parsed = typeof candidate === 'number'
+    ? candidate
+    : Number(String(candidate).replace(/[\s,]/g, ''))
+
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null
+}
+
+const dimensionGroup = key => key.includes(':') ? key.split(':', 1)[0] : ''
+
+export const extractImageDimensions = metadata => {
+  const pairs = new Map()
+
+  for (const [key, value] of Object.entries(metadata)) {
+    const name = normalizeTagName(key)
+    const side = ['exifimagewidth', 'pixelxdimension', 'imagewidth'].includes(name)
+      ? 'width'
+      : ['exifimageheight', 'pixelydimension', 'imageheight'].includes(name)
+          ? 'height'
+          : null
+    if (!side) continue
+
+    const parsed = dimensionValue(value)
+    if (parsed === null) continue
+
+    const group = dimensionGroup(key)
+    const family = name.startsWith('exifimage') || name.startsWith('pixel') ? 'exif' : 'image'
+    const pairKey = `${group}\u0000${family}`
+    const pair = pairs.get(pairKey) || { group, family, width: null, height: null }
+    pair[side] = parsed
+    pairs.set(pairKey, pair)
+  }
+
+  const candidates = [...pairs.values()].filter(pair => pair.width && pair.height)
+  if (!candidates.length) return null
+
+  candidates.sort((left, right) => {
+    const familyDifference = Number(right.family === 'exif') - Number(left.family === 'exif')
+    if (familyDifference) return familyDifference
+    return (right.width * right.height) - (left.width * left.height)
+  })
+
+  const { width, height } = candidates[0]
+  return { width, height }
+}
+
 export const extractShutterCount = metadata => {
   const direct = findTag(metadata, DIRECT_SHUTTER_TAGS)
   if (direct) {

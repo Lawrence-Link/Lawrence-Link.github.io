@@ -2,6 +2,7 @@ import { parseMetadata } from '/vendor/exiftool/index.js'
 import {
   aggregateCameras,
   cameraIdentity,
+  extractImageDimensions,
   extractShutterCount,
   formatFileSize,
   getTag,
@@ -82,8 +83,7 @@ if (root) {
     const metadata = record.metadata
     const shutter = extractShutterCount(metadata)
     const identity = cameraIdentity(metadata)
-    const dimensions = [getTag(metadata, ['ImageWidth', 'ExifImageWidth']), getTag(metadata, ['ImageHeight', 'ExifImageHeight'])]
-    const validDimensions = dimensions.every(value => Number(value) > 0)
+    const dimensions = extractImageDimensions(metadata)
 
     return [
       ['机身', identity.label],
@@ -95,7 +95,7 @@ if (root) {
       ['ISO', exposureValue(metadata, 'ISO')],
       ['焦距', exposureValue(metadata, 'FocalLength', value => `${value} mm`)],
       ['拍摄时间', exposureValue(metadata, 'DateTimeOriginal')],
-      ['尺寸', validDimensions ? `${dimensions[0]} × ${dimensions[1]}` : '--']
+      ['尺寸', dimensions ? `${dimensions.width} × ${dimensions.height}` : '--']
     ]
   }
 

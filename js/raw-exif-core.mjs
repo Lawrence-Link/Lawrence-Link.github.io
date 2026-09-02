@@ -103,6 +103,144 @@ export const extractImageDimensions = metadata => {
   return { width, height }
 }
 
+export const formatMetadataValue = value => {
+  if (value === null || value === undefined || value === '') return '--'
+  if (Array.isArray(value)) return value.join(', ')
+  if (typeof value === 'object') return JSON.stringify(value)
+  return String(value)
+}
+
+const numericTagValue = value => {
+  const candidate = Array.isArray(value) ? value[0] : value
+  if (candidate === null || candidate === undefined || candidate === '') return null
+  const parsed = Number(candidate)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+const formatExposureTime = value => {
+  const numeric = numericTagValue(value)
+  if (numeric === null || numeric <= 0) return formatMetadataValue(value)
+  if (numeric < 1) return `1/${Math.round(1 / numeric)} s`
+  return `${Number(numeric.toFixed(3))} s`
+}
+
+const formatAperture = value => {
+  const numeric = numericTagValue(value)
+  return numeric === null ? formatMetadataValue(value) : `f/${Number(numeric.toFixed(2))}`
+}
+
+const formatFocalLength = value => {
+  const numeric = numericTagValue(value)
+  return numeric === null ? formatMetadataValue(value) : `${Number(numeric.toFixed(1))} mm`
+}
+
+const formatExposureCompensation = value => {
+  const numeric = numericTagValue(value)
+  if (numeric === null) return formatMetadataValue(value)
+  const rounded = Number(numeric.toFixed(2))
+  return `${rounded > 0 ? '+' : ''}${rounded} EV`
+}
+
+const formatExifDate = value => String(value).replace(
+  /^(\d{4}):(\d{2}):(\d{2})(?:[ T])?/,
+  '$1-$2-$3 '
+).trim()
+
+const formatCode = (value, labels) => {
+  const numeric = numericTagValue(value)
+  return numeric !== null && labels[numeric] ? labels[numeric] : formatMetadataValue(value)
+}
+
+const formatLensInfo = value => {
+  const values = (Array.isArray(value) ? value : String(value).match(/\d+(?:\.\d+)?/g) || [])
+    .map(Number)
+    .filter(Number.isFinite)
+  if (values.length < 4) return formatMetadataValue(value)
+
+  const [minFocal, maxFocal, minAperture, maxAperture] = values
+  const focal = minFocal === maxFocal ? `${minFocal} mm` : `${minFocal}-${maxFocal} mm`
+  const aperture = minAperture === maxAperture ? `f/${minAperture}` : `f/${minAperture}-${maxAperture}`
+  return `${focal} · ${aperture}`
+}
+
+const EXPOSURE_PROGRAMS = {
+  0: '未定义',
+  1: '手动',
+  2: '程序自动',
+  3: '光圈优先',
+  4: '快门优先',
+  5: '创意程序',
+  6: '动作程序',
+  7: '人像',
+  8: '风景'
+}
+
+const EXPOSURE_MODES = { 0: '自动', 1: '手动', 2: '自动包围' }
+const METERING_MODES = {
+  0: '未知',
+  1: '平均测光',
+  2: '中央重点平均',
+  3: '点测光',
+  4: '多点测光',
+  5: '多区测光',
+  6: '局部测光',
+  255: '其他'
+}
+const WHITE_BALANCE_MODES = { 0: '自动', 1: '手动' }
+const COLOR_SPACES = { 1: 'sRGB', 2: 'Adobe RGB', 65535: '未标定' }
+const ORIENTATIONS = {
+  1: '水平',
+  2: '水平镜像',
+  3: '旋转 180°',
+  4: '垂直镜像',
+  5: '镜像并旋转 90°',
+  6: '顺时针 90°',
+  7: '镜像并旋转 270°',
+  8: '逆时针 90°'
+}
+
+export const buildOverviewItems = metadata => {
+  const shutter = extractShutterCount(metadata)
+  const identity = cameraIdentity(metadata)
+  const dimensions = extractImageDimensions(metadata)
+  const items = [
+    ['机身', identity.label],
+    ['序列号', identity.serial || '--'],
+    ['镜头', formatMetadataValue(getTag(metadata, ['LensModel', 'LensID']))],
+    ['快门计数', shutter.value === null ? '--' : shutter.value.toLocaleString('zh-CN')],
+    ['快门速度', formatExposureTime(getTag(metadata, ['ExposureTime']))],
+    ['光圈', formatAperture(getTag(metadata, ['FNumber', 'Aperture']))],
+    ['ISO', formatMetadataValue(getTag(metadata, ['ISO', 'ISOSetting']))],
+    ['焦距', formatFocalLength(getTag(metadata, ['FocalLength']))],
+    ['拍摄时间', formatExifDate(getTag(metadata, ['DateTimeOriginal', 'CreateDate']) ?? '--')],
+    ['尺寸', dimensions ? `${dimensions.width} × ${dimensions.height}` : '--']
+  ]
+
+  const optional = (label, names, formatter = formatMetadataValue) => {
+    const value = getTag(metadata, names)
+    if (value !== null && value !== '') items.push([label, formatter(value)])
+  }
+
+  optional('镜头规格', ['LensInfo', 'LensSpecification'], formatLensInfo)
+  optional('等效焦距', ['FocalLengthIn35mmFormat', 'FocalLengthIn35mmFilm'], formatFocalLength)
+  optional('曝光补偿', ['ExposureCompensation', 'ExposureBiasValue'], formatExposureCompensation)
+
+  const exposureProgram = getTag(metadata, ['ExposureProgram'])
+  if (exposureProgram !== null) {
+    items.push(['拍摄模式', formatCode(exposureProgram, EXPOSURE_PROGRAMS)])
+  } else {
+    optional('拍摄模式', ['ExposureMode'], value => formatCode(value, EXPOSURE_MODES))
+  }
+
+  optional('测光模式', ['MeteringMode'], value => formatCode(value, METERING_MODES))
+  optional('白平衡', ['WhiteBalance'], value => formatCode(value, WHITE_BALANCE_MODES))
+  optional('色彩空间', ['ColorSpace'], value => formatCode(value, COLOR_SPACES))
+  optional('方向', ['Orientation'], value => formatCode(value, ORIENTATIONS))
+  optional('处理软件', ['Software'])
+
+  return items
+}
+
 export const extractShutterCount = metadata => {
   const direct = findTag(metadata, DIRECT_SHUTTER_TAGS)
   if (direct) {

@@ -1298,6 +1298,84 @@ a {
   gap: 6px;
 }
 
+@media screen and (min-width: 1320px) {
+  .layout:has(.raw-tool) {
+    max-width: 1680px;
+    padding: 20px 20px 34px;
+  }
+
+  #page:has(.raw-tool) {
+    padding: 24px 28px;
+  }
+
+  .raw-tool {
+    --raw-sidebar-width: 250px;
+  }
+
+  .raw-tool__header {
+    margin-bottom: 12px;
+  }
+
+  .raw-drop-zone {
+    min-height: 76px;
+    padding: 12px 16px;
+  }
+
+  .raw-drop-zone__icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .raw-tool__actions {
+    margin-top: 8px;
+  }
+
+  .raw-summary,
+  .raw-workspace {
+    margin-top: 16px;
+  }
+
+  .raw-summary > div {
+    padding: 12px 16px;
+  }
+
+  .raw-file-list {
+    max-height: 620px;
+    overflow-y: auto;
+  }
+
+  .raw-details {
+    display: grid;
+    grid-template-areas:
+      'header header'
+      'overview filters'
+      'overview tags';
+    grid-template-columns: minmax(460px, 1.15fr) minmax(420px, 0.85fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: 18px;
+    padding: 16px 18px 18px;
+  }
+
+  .raw-details__header {
+    grid-area: header;
+  }
+
+  .raw-overview {
+    grid-area: overview;
+    margin-top: 14px;
+  }
+
+  .raw-filter-bar {
+    grid-area: filters;
+    margin-top: 14px;
+  }
+
+  .raw-tag-table-wrap {
+    grid-area: tags;
+    max-height: 510px;
+  }
+}
+
 #rightside > div > button {
   border-radius: 4px;
   box-shadow: var(--lab-shadow);

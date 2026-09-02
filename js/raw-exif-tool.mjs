@@ -1,12 +1,10 @@
 import { parseMetadata } from '/vendor/exiftool/index.js'
 import {
   aggregateCameras,
-  cameraIdentity,
-  extractImageDimensions,
+  buildOverviewItems,
   extractShutterCount,
   formatFileSize,
-  getTag,
-  normalizeTagName
+  formatMetadataValue
 } from '/js/raw-exif-core.mjs'
 
 const root = document.getElementById('raw-exif-tool')
@@ -63,41 +61,9 @@ if (root) {
 
   const fileExtension = file => file.name.split('.').pop()?.toLowerCase() || ''
 
-  const formatValue = value => {
-    if (value === null || value === undefined || value === '') return '--'
-    if (Array.isArray(value)) return value.join(', ')
-    if (typeof value === 'object') return JSON.stringify(value)
-    return String(value)
-  }
-
   const displayTagName = key => key.replace(/^.*:/, '')
 
   const groupName = key => key.includes(':') ? key.split(':', 1)[0] : 'Other'
-
-  const exposureValue = (metadata, name, formatter = formatValue) => {
-    const value = getTag(metadata, [name])
-    return value === null ? '--' : formatter(value)
-  }
-
-  const overviewItems = record => {
-    const metadata = record.metadata
-    const shutter = extractShutterCount(metadata)
-    const identity = cameraIdentity(metadata)
-    const dimensions = extractImageDimensions(metadata)
-
-    return [
-      ['机身', identity.label],
-      ['序列号', identity.serial || '--'],
-      ['镜头', exposureValue(metadata, 'LensModel')],
-      ['快门计数', shutter.value === null ? '--' : shutter.value.toLocaleString('zh-CN')],
-      ['快门速度', exposureValue(metadata, 'ExposureTime', value => Number(value) > 0 && Number(value) < 1 ? `1/${Math.round(1 / Number(value))} s` : `${value} s`)],
-      ['光圈', exposureValue(metadata, 'FNumber', value => `f/${value}`)],
-      ['ISO', exposureValue(metadata, 'ISO')],
-      ['焦距', exposureValue(metadata, 'FocalLength', value => `${value} mm`)],
-      ['拍摄时间', exposureValue(metadata, 'DateTimeOriginal')],
-      ['尺寸', dimensions ? `${dimensions.width} × ${dimensions.height}` : '--']
-    ]
-  }
 
   const renderSummary = () => {
     const successful = state.records.filter(record => record.metadata)
@@ -158,7 +124,7 @@ if (root) {
     const rows = Object.entries(record.metadata)
       .filter(([key, value]) => {
         const groupMatches = selectedGroup === 'all' || groupName(key) === selectedGroup
-        const textMatches = !query || `${key} ${formatValue(value)}`.toLowerCase().includes(query)
+        const textMatches = !query || `${key} ${formatMetadataValue(value)}`.toLowerCase().includes(query)
         return groupMatches && textMatches
       })
       .sort(([left], [right]) => left.localeCompare(right))
@@ -170,7 +136,7 @@ if (root) {
       const name = create('span', 'raw-tag-name', displayTagName(key))
       nameCell.append(group, name)
       const valueCell = document.createElement('td')
-      setText(valueCell, formatValue(value))
+      setText(valueCell, formatMetadataValue(value))
       row.append(nameCell, valueCell)
       elements.rows.append(row)
     }
@@ -213,7 +179,7 @@ if (root) {
       return
     }
 
-    for (const [label, value] of overviewItems(record)) {
+    for (const [label, value] of buildOverviewItems(record.metadata)) {
       const item = create('div', 'raw-overview__item')
       item.append(create('span', '', label), create('strong', '', value))
       elements.overview.append(item)

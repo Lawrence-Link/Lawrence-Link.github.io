@@ -20,8 +20,8 @@
 
 .pixelui-docs-nav a:hover,
 .pixelui-docs-nav a:focus-visible {
-  border-color: #49b1f5;
-  color: #49b1f5;
+  border-color: #52789d;
+  color: #52789d;
 }
 
 .pixelui-docs-nav i {
@@ -46,7 +46,7 @@
 
 .pixelui-language-switch span[aria-current='page'] {
   color: #fff;
-  background: #1677a7;
+  background: #52789d;
 }
 
 @media screen and (max-width: 768px) {

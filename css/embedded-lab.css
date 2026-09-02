@@ -510,11 +510,6 @@ html.me0w-booting body {
   white-space: nowrap;
 }
 
-.raw-drop-zone__privacy i {
-  margin-right: 5px;
-  color: var(--lab-green);
-}
-
 .raw-tool__input {
   position: absolute;
   width: 1px;
@@ -1267,9 +1262,40 @@ a {
 }
 
 #footer {
-  padding: 30px 20px;
+  padding: 0;
   color: var(--lab-muted);
   font-size: 12px;
+}
+
+#footer .footer-other {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px 12px;
+  padding: 14px 20px;
+  line-height: 1.6;
+}
+
+#footer .footer-copyright {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 10px;
+}
+
+#footer .footer-copyright .framework-info {
+  display: inline;
+}
+
+#footer .footer_custom_text {
+  margin: 0;
+}
+
+#footer .footer-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 #rightside > div > button {

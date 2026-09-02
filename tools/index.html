@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Tools / 工具 | Linked &gt;&gt; Blog</title><meta name="author" content="Link0327"><meta name="copyright" content="Link0327"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#080c0e"><meta name="description" content="LOCAL METADATA CONSOLE       RAW EXIF Inspector          READY                        选择 RAW 文件       CR2 · CR3 · NEF · ARW · RAF · ORF · RW2 · DNG · TIFF · JPEG           本地解析">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tools &#x2F; 工具">
+<meta property="og:url" content="https://me0w.org/tools/index.html">
+<meta property="og:site_name" content="Linked &gt;&gt; Blog">
+<meta property="og:description" content="LOCAL METADATA CONSOLE       RAW EXIF Inspector          READY                        选择 RAW 文件       CR2 · CR3 · NEF · ARW · RAF · ORF · RW2 · DNG · TIFF · JPEG           本地解析">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://me0w.org/img/artwork.jpg">
+<meta property="article:published_time" content="2026-09-02T05:30:39.514Z">
+<meta property="article:modified_time" content="2026-09-02T05:30:39.514Z">
+<meta property="article:author" content="Link0327">
+<meta property="article:tag" content="PixelUI Lawrence-Link">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://me0w.org/img/artwork.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://me0w.org/tools/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#080c0e')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#edf3f2')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Tools / 工具',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/pixelui-docs.css"><link rel="stylesheet" href="/css/embedded-lab.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/artwork.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fas fa-wrench"></i><span> Tools</span></a></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> Friends</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.png" alt="Logo"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fas fa-wrench"></i><span> Tools</span></a></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> Friends</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">Tools / 工具</h1></header><main class="layout hide-aside" id="content-inner"><div id="page"><div class="page-title">Tools / 工具</div><div class="container" id="article-container">
+<section class="raw-tool" id="raw-exif-tool" aria-labelledby="raw-tool-title">
+  <header class="raw-tool__header">
+    <div>
+      <div class="raw-tool__eyebrow">LOCAL METADATA CONSOLE</div>
+      <h2 id="raw-tool-title">RAW EXIF Inspector</h2>
+    </div>
+    <output class="raw-tool__status" id="raw-tool-status" data-state="ready">READY</output>
+  </header>
+
+  <label class="raw-drop-zone" id="raw-drop-zone" data-dragging="false" for="raw-file-input">
+    <span class="raw-drop-zone__icon"><i class="fas fa-file-arrow-up" aria-hidden="true"></i></span>
+    <span class="raw-drop-zone__copy">
+      <strong>选择 RAW 文件</strong>
+      <small>CR2 · CR3 · NEF · ARW · RAF · ORF · RW2 · DNG · TIFF · JPEG</small>
+    </span>
+    <span class="raw-drop-zone__privacy"><i class="fas fa-shield-halved" aria-hidden="true"></i> 本地解析</span>
+  </label>
+  <input class="raw-tool__input" id="raw-file-input" type="file" multiple accept=".3fr,.arw,.cr2,.cr3,.dng,.erf,.fff,.iiq,.kdc,.mef,.mos,.mrw,.nef,.nrw,.orf,.pef,.raf,.raw,.rw2,.rwl,.sr2,.srf,.srw,.x3f,.heic,.heif,.jpeg,.jpg,.tif,.tiff">
+
+  <div class="raw-progress" id="raw-progress" hidden><span id="raw-progress-bar"></span></div>
+
+  <div class="raw-tool__actions" id="raw-actions" hidden>
+    <button class="raw-icon-button" id="raw-clear" type="button" title="清空结果" aria-label="清空结果"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+    <button class="raw-command-button" id="raw-export" type="button"><i class="fas fa-download" aria-hidden="true"></i><span>导出 JSON</span></button>
+  </div>
+
+  <section class="raw-summary" id="raw-summary" aria-label="解析汇总" hidden>
+    <div><span>FILES</span><strong id="raw-file-count">0</strong><small>成功解析</small></div>
+    <div><span>CAMERAS</span><strong id="raw-camera-count">0</strong><small>机身数量</small></div>
+    <div class="raw-summary__shutter"><span>SHUTTER TOTAL</span><strong id="raw-shutter-total">--</strong><small id="raw-shutter-note">等待解析</small></div>
+  </section>
+
+  <div class="raw-workspace" id="raw-workspace" hidden>
+    <nav class="raw-file-list" aria-label="已解析文件">
+      <div class="raw-file-list__label">FILES</div>
+      <ul id="raw-files"></ul>
+    </nav>
+
+    <section class="raw-details" id="raw-details">
+      <header class="raw-details__header">
+        <div>
+          <h3 id="raw-detail-title"></h3>
+          <p id="raw-detail-meta"></p>
+        </div>
+      </header>
+
+      <div class="raw-overview" id="raw-overview"></div>
+
+      <div class="raw-filter-bar">
+        <label class="raw-search">
+          <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+          <input id="raw-search" type="search" placeholder="搜索标签或值" aria-label="搜索标签或值">
+        </label>
+        <select id="raw-group" aria-label="筛选元数据分组"><option value="all">全部分组</option></select>
+      </div>
+
+      <div class="raw-tag-table-wrap">
+        <table class="raw-tag-table">
+          <thead><tr><th scope="col">TAG</th><th scope="col">VALUE</th></tr></thead>
+          <tbody id="raw-tag-rows"></tbody>
+        </table>
+        <p class="raw-empty-tags" id="raw-empty-tags" hidden>没有匹配的标签</p>
+      </div>
+    </section>
+  </div>
+</section>
+
+<script type="module" src="/js/raw-exif-tool.mjs"></script>
+
+</div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Link0327</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Toggle Between Traditional and Simplified Chinese">繁</button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="/js/tw_cn.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/me0w-boot.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

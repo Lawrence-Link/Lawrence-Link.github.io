@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>友情链接 / Friends | Linked &gt;&gt; Blog</title><meta name="author" content="Link0327"><meta name="copyright" content="Link0327"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#080c0e"><meta name="description" content="交换友链如果你也在长期维护自己的站点，欢迎通过页面底部的邮箱联系我。请附上站点名称、地址、头像和一句简短介绍。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="友情链接 &#x2F; Friends">
+<meta property="og:url" content="https://me0w.org/friends/index.html">
+<meta property="og:site_name" content="Linked &gt;&gt; Blog">
+<meta property="og:description" content="交换友链如果你也在长期维护自己的站点，欢迎通过页面底部的邮箱联系我。请附上站点名称、地址、头像和一句简短介绍。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://me0w.org/img/artwork.jpg">
+<meta property="article:published_time" content="2026-09-02T05:06:06.180Z">
+<meta property="article:modified_time" content="2026-09-02T05:06:06.180Z">
+<meta property="article:author" content="Link0327">
+<meta property="article:tag" content="PixelUI Lawrence-Link">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://me0w.org/img/artwork.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://me0w.org/friends/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#080c0e')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#edf3f2')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '友情链接 / Friends',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/pixelui-docs.css"><link rel="stylesheet" href="/css/embedded-lab.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/artwork.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fas fa-wrench"></i><span> Tools</span></a></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> Friends</span></a></div></div></div></div><div class="page type-link" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.png" alt="Logo"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fas fa-wrench"></i><span> Tools</span></a></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> Friends</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">友情链接 / Friends</h1></header><main class="layout hide-aside" id="content-inner"><div id="page"><div class="page-title">友情链接 / Friends</div><div class="container" id="article-container"><div class="flink"><h2 id="友情链接"><a href="#友情链接" class="headerlink" title="友情链接"></a>友情链接</h2><div class="flink-desc">在各自的角落持续写作，也偶尔彼此串门。</div> <div class="flink-list">
+  <div class="flink-list-item">
+    <a href="https://blog.ianxia.com" title="比格/Bigsk" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/bigsk.webp" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="比格/Bigsk" />
+      </div>
+      <div class="flink-item-name">比格/Bigsk</div>
+      <div class="flink-item-desc" title="blog.ianxia.com">blog.ianxia.com</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://isluohui.netlify.app" title="不大水龙" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/budashuilong.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="不大水龙" />
+      </div>
+      <div class="flink-item-name">不大水龙</div>
+      <div class="flink-item-desc" title="isluohui.netlify.app">isluohui.netlify.app</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://blog.sevtinge.com/friends" title="绀漓の锟斤拷" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/gl.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="绀漓の锟斤拷" />
+      </div>
+      <div class="flink-item-name">绀漓の锟斤拷</div>
+      <div class="flink-item-desc" title="blog.sevtinge.com">blog.sevtinge.com</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://q-bot.cn" title="星诺StarNol" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/hajinuo.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="星诺StarNol" />
+      </div>
+      <div class="flink-item-name">星诺StarNol</div>
+      <div class="flink-item-desc" title="q-bot.cn">q-bot.cn</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://honeywhite.cloud" title="HoneyWhiteCloud" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/HoneyWhiteCloud.jpeg" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="HoneyWhiteCloud" />
+      </div>
+      <div class="flink-item-name">HoneyWhiteCloud</div>
+      <div class="flink-item-desc" title="honeywhite.cloud">honeywhite.cloud</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://blog.fmyron.com" title="洺渊" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/mingyuan.jpg" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="洺渊" />
+      </div>
+      <div class="flink-item-name">洺渊</div>
+      <div class="flink-item-desc" title="blog.fmyron.com">blog.fmyron.com</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://www.xming.cloud" title="明宇" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/tming.jpg" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="明宇" />
+      </div>
+      <div class="flink-item-name">明宇</div>
+      <div class="flink-item-desc" title="xming.cloud">xming.cloud</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://me0w.cat/" title="猫喵" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/maomiao.jpg" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="猫喵" />
+      </div>
+      <div class="flink-item-name">猫喵</div>
+      <div class="flink-item-desc" title="me0w.cat">me0w.cat</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://wildcreator.top/" title="wildcreator" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/wildcreator.jpg" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="wildcreator" />
+      </div>
+      <div class="flink-item-name">wildcreator</div>
+      <div class="flink-item-desc" title="wildcreator.top">wildcreator.top</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="http://x1193.wikidot.com" title="x1193" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/X1193.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="x1193" />
+      </div>
+      <div class="flink-item-name">x1193</div>
+      <div class="flink-item-desc" title="x1193.wikidot.com">x1193.wikidot.com</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://yangyanot.top/" title="杨焱" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/yangyan.jpeg" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="杨焱" />
+      </div>
+      <div class="flink-item-name">杨焱</div>
+      <div class="flink-item-desc" title="yangyanot.top">yangyanot.top</div>
+    </a>
+  </div>
+  <div class="flink-list-item">
+    <a href="https://zhazha120.cn" title="渣渣120" target="_blank">
+      <div class="flink-item-icon">
+        <img class="no-lightbox" src="/img/friendslink/zhazha120.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="渣渣120" />
+      </div>
+      <div class="flink-item-name">渣渣120</div>
+      <div class="flink-item-desc" title="zhazha120.cn">zhazha120.cn</div>
+    </a>
+  </div></div><h2 id="交换友链"><a href="#交换友链" class="headerlink" title="交换友链"></a>交换友链</h2><p>如果你也在长期维护自己的站点，欢迎通过页面底部的邮箱联系我。请附上站点名称、地址、头像和一句简短介绍。</p>
+</div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Link0327</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Toggle Between Traditional and Simplified Chinese">繁</button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="/js/tw_cn.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/me0w-boot.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

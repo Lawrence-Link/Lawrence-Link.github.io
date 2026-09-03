@@ -11,6 +11,8 @@
   --lab-shadow: 0 1px 2px rgba(18, 24, 32, 0.04);
   --lab-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --lab-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --lab-cursor-default: url('/img/cursor-default.svg') 3 2, default;
+  --lab-cursor-action: url('/img/cursor-pointer.svg') 12 2, pointer;
 }
 
 [data-theme='dark'] {
@@ -36,6 +38,44 @@ body {
   background: var(--lab-bg);
   font-family: var(--lab-sans);
   letter-spacing: 0;
+}
+
+@media (pointer: fine) {
+  html,
+  body,
+  body * {
+    cursor: var(--lab-cursor-default);
+  }
+
+  a,
+  button,
+  select,
+  summary,
+  label[for],
+  input[type='button'],
+  input[type='checkbox'],
+  input[type='file'],
+  input[type='radio'],
+  input[type='range'],
+  input[type='reset'],
+  input[type='submit'],
+  [role='button'],
+  [onclick] {
+    cursor: var(--lab-cursor-action) !important;
+  }
+
+  input:not([type]),
+  input[type='email'],
+  input[type='number'],
+  input[type='password'],
+  input[type='search'],
+  input[type='tel'],
+  input[type='text'],
+  input[type='url'],
+  textarea,
+  [contenteditable='true'] {
+    cursor: text;
+  }
 }
 
 body::before {
@@ -510,6 +550,52 @@ html.me0w-booting body {
   white-space: nowrap;
 }
 
+.raw-shutter-settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--lab-border);
+  border-radius: 3px;
+  background: var(--lab-panel-strong);
+}
+
+.raw-shutter-settings label span,
+.raw-shutter-settings label small {
+  display: block;
+}
+
+.raw-shutter-settings label span {
+  color: var(--text-highlight-color);
+  font-family: var(--lab-mono);
+  font-size: 11px;
+}
+
+.raw-shutter-settings label small {
+  margin-top: 3px;
+  color: var(--lab-muted);
+  font-size: 10px;
+}
+
+.raw-shutter-settings input {
+  flex: 0 0 150px;
+  width: 150px;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--lab-border);
+  border-radius: 3px;
+  outline: 0;
+  color: var(--text-highlight-color);
+  background: var(--lab-panel);
+  font-family: var(--lab-mono);
+}
+
+.raw-shutter-settings input:focus {
+  border-color: var(--lab-cyan);
+}
+
 .raw-tool__input {
   position: absolute;
   width: 1px;
@@ -577,7 +663,7 @@ html.me0w-booting body {
 
 .raw-summary {
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 2fr 1fr;
   margin-top: 24px;
   border-block: 1px solid var(--lab-border);
 }
@@ -604,8 +690,21 @@ html.me0w-booting body {
   white-space: nowrap;
 }
 
-.raw-summary__shutter strong {
+.raw-summary__shutter strong,
+.raw-summary__grade strong {
   color: var(--lab-green);
+}
+
+.raw-summary__grade[data-grade='b'] strong {
+  color: var(--lab-cyan);
+}
+
+.raw-summary__grade[data-grade='c'] strong {
+  color: var(--lab-amber);
+}
+
+.raw-summary__grade[data-grade='d'] strong {
+  color: #e07171;
 }
 
 .raw-workspace {
@@ -1003,6 +1102,11 @@ kbd {
     grid-column: 1 / -1;
     border-top: 1px solid var(--lab-border);
   }
+
+  .raw-summary__grade {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--lab-border);
+  }
 }
 
 @media screen and (max-width: 520px) {
@@ -1016,10 +1120,12 @@ kbd {
   }
 
   .raw-tool__header {
-    align-items: flex-start;
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .raw-tool__status {
+    align-self: flex-start;
     max-width: 130px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1040,6 +1146,16 @@ kbd {
   .raw-drop-zone__privacy {
     grid-column: 2;
     white-space: normal;
+  }
+
+  .raw-shutter-settings {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .raw-shutter-settings input {
+    flex-basis: auto;
+    width: 100%;
   }
 
   .raw-summary > div {

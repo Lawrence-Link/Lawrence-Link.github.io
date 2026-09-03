@@ -164,56 +164,71 @@ const formatLensInfo = value => {
 }
 
 const EXPOSURE_PROGRAMS = {
-  0: '未定义',
-  1: '手动',
-  2: '程序自动',
-  3: '光圈优先',
-  4: '快门优先',
-  5: '创意程序',
-  6: '动作程序',
-  7: '人像',
-  8: '风景'
+  0: 'Undefined / 未定义',
+  1: 'Manual / 手动',
+  2: 'Program AE / 程序自动',
+  3: 'Aperture priority / 光圈优先',
+  4: 'Shutter priority / 快门优先',
+  5: 'Creative program / 创意程序',
+  6: 'Action program / 动作程序',
+  7: 'Portrait / 人像',
+  8: 'Landscape / 风景'
 }
 
-const EXPOSURE_MODES = { 0: '自动', 1: '手动', 2: '自动包围' }
+const EXPOSURE_MODES = { 0: 'Auto / 自动', 1: 'Manual / 手动', 2: 'Auto bracket / 自动包围' }
 const METERING_MODES = {
-  0: '未知',
-  1: '平均测光',
-  2: '中央重点平均',
-  3: '点测光',
-  4: '多点测光',
-  5: '多区测光',
-  6: '局部测光',
-  255: '其他'
+  0: 'Unknown / 未知',
+  1: 'Average / 平均测光',
+  2: 'Center-weighted average / 中央重点平均',
+  3: 'Spot / 点测光',
+  4: 'Multi-spot / 多点测光',
+  5: 'Multi-segment / 多区测光',
+  6: 'Partial / 局部测光',
+  255: 'Other / 其他'
 }
-const WHITE_BALANCE_MODES = { 0: '自动', 1: '手动' }
-const COLOR_SPACES = { 1: 'sRGB', 2: 'Adobe RGB', 65535: '未标定' }
+const WHITE_BALANCE_MODES = { 0: 'Auto / 自动', 1: 'Manual / 手动' }
+const COLOR_SPACES = { 1: 'sRGB', 2: 'Adobe RGB', 65535: 'Uncalibrated / 未标定' }
 const ORIENTATIONS = {
-  1: '水平',
-  2: '水平镜像',
-  3: '旋转 180°',
-  4: '垂直镜像',
-  5: '镜像并旋转 90°',
-  6: '顺时针 90°',
-  7: '镜像并旋转 270°',
-  8: '逆时针 90°'
+  1: 'Horizontal / 水平',
+  2: 'Mirror horizontal / 水平镜像',
+  3: 'Rotate 180° / 旋转 180°',
+  4: 'Mirror vertical / 垂直镜像',
+  5: 'Mirror + rotate 90° / 镜像并旋转 90°',
+  6: 'Rotate 90° CW / 顺时针 90°',
+  7: 'Mirror + rotate 270° / 镜像并旋转 270°',
+  8: 'Rotate 90° CCW / 逆时针 90°'
 }
 
-export const buildOverviewItems = metadata => {
+export const gradeShutterCount = (count, maximum) => {
+  if (!Number.isFinite(count) || count < 0 || !Number.isFinite(maximum) || maximum <= 0) return null
+  const ratio = count / maximum
+  const grade = ratio <= 0.25 ? 'A' : ratio <= 0.5 ? 'B' : ratio <= 0.75 ? 'C' : 'D'
+  const labels = {
+    A: 'Excellent / 优秀',
+    B: 'Good / 良好',
+    C: 'Attention / 留意',
+    D: 'Near or over limit / 接近或超过上限'
+  }
+  return { grade, ratio, label: labels[grade] }
+}
+
+export const buildOverviewItems = (metadata, maximumShutterCount = 200000) => {
   const shutter = extractShutterCount(metadata)
+  const shutterGrade = gradeShutterCount(shutter.value, maximumShutterCount)
   const identity = cameraIdentity(metadata)
   const dimensions = extractImageDimensions(metadata)
   const items = [
-    ['机身', identity.label],
-    ['序列号', identity.serial || '--'],
-    ['镜头', formatMetadataValue(getTag(metadata, ['LensModel', 'LensID']))],
-    ['快门计数', shutter.value === null ? '--' : shutter.value.toLocaleString('zh-CN')],
-    ['快门速度', formatExposureTime(getTag(metadata, ['ExposureTime']))],
-    ['光圈', formatAperture(getTag(metadata, ['FNumber', 'Aperture']))],
+    ['Camera / 机身', identity.label],
+    ['Serial number / 序列号', identity.serial || '--'],
+    ['Lens / 镜头', formatMetadataValue(getTag(metadata, ['LensModel', 'LensID']))],
+    ['Shutter count / 快门计数', shutter.value === null ? '--' : shutter.value.toLocaleString('zh-CN')],
+    ['Shutter grade / 快门评级', shutterGrade ? `${shutterGrade.grade} · ${shutterGrade.label} · ${(shutterGrade.ratio * 100).toFixed(1)}%` : '--'],
+    ['Shutter speed / 快门速度', formatExposureTime(getTag(metadata, ['ExposureTime']))],
+    ['Aperture / 光圈', formatAperture(getTag(metadata, ['FNumber', 'Aperture']))],
     ['ISO', formatMetadataValue(getTag(metadata, ['ISO', 'ISOSetting']))],
-    ['焦距', formatFocalLength(getTag(metadata, ['FocalLength']))],
-    ['拍摄时间', formatExifDate(getTag(metadata, ['DateTimeOriginal', 'CreateDate']) ?? '--')],
-    ['尺寸', dimensions ? `${dimensions.width} × ${dimensions.height}` : '--']
+    ['Focal length / 焦距', formatFocalLength(getTag(metadata, ['FocalLength']))],
+    ['Captured at / 拍摄时间', formatExifDate(getTag(metadata, ['DateTimeOriginal', 'CreateDate']) ?? '--')],
+    ['Dimensions / 尺寸', dimensions ? `${dimensions.width} × ${dimensions.height}` : '--']
   ]
 
   const optional = (label, names, formatter = formatMetadataValue) => {
@@ -221,22 +236,22 @@ export const buildOverviewItems = metadata => {
     if (value !== null && value !== '') items.push([label, formatter(value)])
   }
 
-  optional('镜头规格', ['LensInfo', 'LensSpecification'], formatLensInfo)
-  optional('等效焦距', ['FocalLengthIn35mmFormat', 'FocalLengthIn35mmFilm'], formatFocalLength)
-  optional('曝光补偿', ['ExposureCompensation', 'ExposureBiasValue'], formatExposureCompensation)
+  optional('Lens specification / 镜头规格', ['LensInfo', 'LensSpecification'], formatLensInfo)
+  optional('35mm equivalent / 等效焦距', ['FocalLengthIn35mmFormat', 'FocalLengthIn35mmFilm'], formatFocalLength)
+  optional('Exposure compensation / 曝光补偿', ['ExposureCompensation', 'ExposureBiasValue'], formatExposureCompensation)
 
   const exposureProgram = getTag(metadata, ['ExposureProgram'])
   if (exposureProgram !== null) {
-    items.push(['拍摄模式', formatCode(exposureProgram, EXPOSURE_PROGRAMS)])
+    items.push(['Exposure program / 拍摄模式', formatCode(exposureProgram, EXPOSURE_PROGRAMS)])
   } else {
-    optional('拍摄模式', ['ExposureMode'], value => formatCode(value, EXPOSURE_MODES))
+    optional('Exposure mode / 拍摄模式', ['ExposureMode'], value => formatCode(value, EXPOSURE_MODES))
   }
 
-  optional('测光模式', ['MeteringMode'], value => formatCode(value, METERING_MODES))
-  optional('白平衡', ['WhiteBalance'], value => formatCode(value, WHITE_BALANCE_MODES))
-  optional('色彩空间', ['ColorSpace'], value => formatCode(value, COLOR_SPACES))
-  optional('方向', ['Orientation'], value => formatCode(value, ORIENTATIONS))
-  optional('处理软件', ['Software'])
+  optional('Metering mode / 测光模式', ['MeteringMode'], value => formatCode(value, METERING_MODES))
+  optional('White balance / 白平衡', ['WhiteBalance'], value => formatCode(value, WHITE_BALANCE_MODES))
+  optional('Color space / 色彩空间', ['ColorSpace'], value => formatCode(value, COLOR_SPACES))
+  optional('Orientation / 方向', ['Orientation'], value => formatCode(value, ORIENTATIONS))
+  optional('Software / 处理软件', ['Software'])
 
   return items
 }
@@ -273,7 +288,7 @@ export const cameraIdentity = metadata => {
   const make = getTag(metadata, ['Make'])
   const model = getTag(metadata, ['Model', 'CameraModelName'])
   const serial = getTag(metadata, ['BodySerialNumber', 'CameraSerialNumber', 'SerialNumber'])
-  const label = [make, model].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim() || '未知机身'
+  const label = [make, model].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim() || 'Unknown camera / 未知机身'
 
   return {
     label,

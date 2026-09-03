@@ -4,7 +4,8 @@ import {
   buildOverviewItems,
   extractShutterCount,
   formatFileSize,
-  formatMetadataValue
+  formatMetadataValue,
+  gradeShutterCount
 } from '/js/raw-exif-core.mjs'
 
 const root = document.getElementById('raw-exif-tool')
@@ -24,6 +25,10 @@ if (root) {
     cameraCount: root.querySelector('#raw-camera-count'),
     shutterTotal: root.querySelector('#raw-shutter-total'),
     shutterNote: root.querySelector('#raw-shutter-note'),
+    shutterGrade: root.querySelector('#raw-shutter-grade'),
+    shutterGradeNote: root.querySelector('#raw-shutter-grade-note'),
+    shutterGradeCard: root.querySelector('.raw-summary__grade'),
+    shutterLimit: root.querySelector('#raw-shutter-limit'),
     workspace: root.querySelector('#raw-workspace'),
     files: root.querySelector('#raw-files'),
     details: root.querySelector('#raw-details'),
@@ -47,6 +52,17 @@ if (root) {
     'mos', 'mrw', 'nef', 'nrw', 'orf', 'pef', 'raf', 'raw', 'rw2', 'rwl',
     'sr2', 'srf', 'srw', 'x3f', 'heic', 'heif', 'jpeg', 'jpg', 'tif', 'tiff'
   ])
+  const shutterLimitStorageKey = 'raw-exif-shutter-limit'
+
+  const readShutterLimit = () => {
+    const value = Number(elements.shutterLimit.value)
+    return Number.isFinite(value) && value >= 1000 ? Math.round(value) : 200000
+  }
+
+  try {
+    const savedLimit = Number(window.localStorage.getItem(shutterLimitStorageKey))
+    if (Number.isFinite(savedLimit) && savedLimit >= 1000) elements.shutterLimit.value = String(Math.round(savedLimit))
+  } catch {}
 
   const setText = (element, value) => {
     element.textContent = value
@@ -63,25 +79,40 @@ if (root) {
 
   const displayTagName = key => key.replace(/^.*:/, '')
 
-  const groupName = key => key.includes(':') ? key.split(':', 1)[0] : 'Other'
+  const groupName = key => key.includes(':') ? key.split(':', 1)[0] : 'Other / 其他'
 
   const renderSummary = () => {
     const successful = state.records.filter(record => record.metadata)
     const cameras = aggregateCameras(successful)
     const counts = cameras.filter(camera => camera.shutter !== null)
+    const graded = counts
+      .map(camera => ({ camera, result: gradeShutterCount(camera.shutter, readShutterLimit()) }))
+      .filter(item => item.result)
+      .sort((left, right) => right.result.ratio - left.result.ratio)
 
     setText(elements.fileCount, `${successful.length}`)
     setText(elements.cameraCount, `${cameras.length}`)
 
     if (counts.length === 1) {
       setText(elements.shutterTotal, counts[0].shutter.toLocaleString('zh-CN'))
-      setText(elements.shutterNote, counts[0].method === 'combined' ? '机械 + 电子计数' : counts[0].label)
+      setText(elements.shutterNote, counts[0].method === 'combined' ? 'Mechanical + electronic / 机械 + 电子计数' : counts[0].label)
     } else if (counts.length > 1) {
-      setText(elements.shutterTotal, `${counts.length} 台`)
+      setText(elements.shutterTotal, `${counts.length} bodies / ${counts.length} 台`)
       setText(elements.shutterNote, counts.map(camera => `${camera.label} · ${camera.shutter.toLocaleString('zh-CN')}`).join(' / '))
     } else {
       setText(elements.shutterTotal, '--')
-      setText(elements.shutterNote, successful.length ? '文件未提供可识别的快门计数' : '等待解析')
+      setText(elements.shutterNote, successful.length ? 'No recognizable shutter count / 文件未提供可识别的快门计数' : 'Waiting / 等待解析')
+    }
+
+    if (graded.length) {
+      const { camera, result } = graded[0]
+      setText(elements.shutterGrade, result.grade)
+      setText(elements.shutterGradeNote, `${result.label} · ${(result.ratio * 100).toFixed(1)}%${graded.length > 1 ? ` · ${camera.label}` : ''}`)
+      elements.shutterGradeCard.dataset.grade = result.grade.toLowerCase()
+    } else {
+      setText(elements.shutterGrade, '--')
+      setText(elements.shutterGradeNote, 'Shutter count unavailable / 无可用快门计数')
+      elements.shutterGradeCard.dataset.grade = 'unknown'
     }
   }
 
@@ -99,7 +130,7 @@ if (root) {
       icon.setAttribute('aria-hidden', 'true')
       const copy = create('span', 'raw-file-list__copy')
       copy.append(create('strong', '', record.file.name))
-      copy.append(create('small', '', record.error ? '解析失败' : formatFileSize(record.file.size)))
+      copy.append(create('small', '', record.error ? 'Parse failed / 解析失败' : formatFileSize(record.file.size)))
       button.append(icon, copy)
       button.addEventListener('click', () => {
         state.selected = index
@@ -150,7 +181,7 @@ if (root) {
     elements.group.replaceChildren()
     const all = document.createElement('option')
     all.value = 'all'
-    setText(all, '全部分组')
+    setText(all, 'All groups / 全部分组')
     elements.group.append(all)
     for (const group of groups) {
       const option = document.createElement('option')
@@ -166,7 +197,7 @@ if (root) {
     if (!record) return
 
     setText(elements.detailTitle, record.file.name)
-    setText(elements.detailMeta, `${formatFileSize(record.file.size)} · ${fileExtension(record.file).toUpperCase() || 'FILE'}`)
+    setText(elements.detailMeta, `${formatFileSize(record.file.size)} · ${fileExtension(record.file).toUpperCase() || 'FILE / 文件'}`)
     elements.overview.replaceChildren()
 
     if (record.error) {
@@ -179,7 +210,7 @@ if (root) {
       return
     }
 
-    for (const [label, value] of buildOverviewItems(record.metadata)) {
+    for (const [label, value] of buildOverviewItems(record.metadata, readShutterLimit())) {
       const item = create('div', 'raw-overview__item')
       item.append(create('span', '', label), create('strong', '', value))
       elements.overview.append(item)
@@ -207,7 +238,10 @@ if (root) {
       transform: JSON.parse
     })
 
-    if (!result.success) throw new Error(result.error || 'ExifTool 无法解析此文件')
+    if (!result.success) {
+      const detail = result.error ? `: ${result.error}` : ''
+      throw new Error(`Parse failed / 解析失败${detail}`)
+    }
     return result.data?.[0] || {}
   }
 
@@ -215,7 +249,7 @@ if (root) {
     if (state.processing) return
     const files = [...fileList].filter(file => supportedExtensions.has(fileExtension(file)))
     if (!files.length) {
-      setText(elements.status, '未找到支持的图像文件')
+      setText(elements.status, 'No supported image files / 未找到支持的图像文件')
       elements.status.dataset.state = 'error'
       return
     }
@@ -231,7 +265,7 @@ if (root) {
 
     for (let index = 0; index < files.length; index += 1) {
       const file = files[index]
-      setText(elements.status, `解析中 ${index + 1}/${files.length} · ${file.name}`)
+      setText(elements.status, `PARSING / 解析中 ${index + 1}/${files.length} · ${file.name}`)
       try {
         const metadata = await parseFile(file)
         state.records.push({ file, metadata, error: null })
@@ -245,7 +279,8 @@ if (root) {
     state.processing = false
     elements.input.disabled = false
     elements.status.dataset.state = 'ready'
-    setText(elements.status, `${files.length} 个文件解析完成`)
+    const fileLabel = files.length === 1 ? 'file' : 'files'
+    setText(elements.status, `COMPLETE / 已完成 · ${files.length} ${fileLabel} / ${files.length} 个文件`)
     window.setTimeout(() => {
       elements.progress.hidden = true
     }, 500)
@@ -254,13 +289,20 @@ if (root) {
   elements.input.addEventListener('change', event => processFiles(event.target.files))
   elements.search.addEventListener('input', renderRows)
   elements.group.addEventListener('change', renderRows)
+  elements.shutterLimit.addEventListener('change', () => {
+    elements.shutterLimit.value = String(readShutterLimit())
+    try {
+      window.localStorage.setItem(shutterLimitStorageKey, elements.shutterLimit.value)
+    } catch {}
+    render()
+  })
 
   elements.clear.addEventListener('click', () => {
     state.records = []
     state.selected = 0
     elements.input.value = ''
     elements.search.value = ''
-    setText(elements.status, 'READY')
+    setText(elements.status, 'READY / 就绪')
     elements.status.dataset.state = 'ready'
     render()
   })
@@ -270,6 +312,8 @@ if (root) {
       file: record.file.name,
       size: record.file.size,
       shutter: extractShutterCount(record.metadata),
+      shutterGrade: gradeShutterCount(extractShutterCount(record.metadata).value, readShutterLimit()),
+      maximumShutterCount: readShutterLimit(),
       metadata: record.metadata
     }))
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))

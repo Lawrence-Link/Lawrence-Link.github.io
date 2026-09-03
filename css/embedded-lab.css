@@ -428,6 +428,14 @@ html.me0w-booting body {
   font-size: 20px;
 }
 
+.raw-tool__intro {
+  max-width: 920px;
+  margin: -8px 0 18px;
+  color: var(--lab-muted);
+  font-size: 12px;
+  line-height: 1.75;
+}
+
 .raw-tool__status {
   flex: 0 0 auto;
   padding: 6px 8px;
@@ -1090,6 +1098,10 @@ kbd {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .raw-tool__intro {
+    margin-top: 0;
   }
 
   .raw-drop-zone {

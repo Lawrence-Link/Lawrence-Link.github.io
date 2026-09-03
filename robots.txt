@@ -1,3 +1,9 @@
+# me0w.org public crawl policy
+# Search engines may crawl and index all public pages and rendering assets.
+# Primary EXIF tool: https://me0w.org/tools/index.html
+
 User-agent: *
 Allow: /
+
+# Canonical discovery feed
 Sitemap: https://me0w.org/sitemap.xml

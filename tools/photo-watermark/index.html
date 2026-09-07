@@ -1,0 +1,260 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Photo Watermark Frame &amp; EXIF Generator / 摄影水印相框与 EXIF 生成器 | Linked &gt;&gt; Blog</title><meta name="author" content="Link0327"><meta name="copyright" content="Link0327"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0f1115"><meta name="description" content="Create high-resolution photo frames and EXIF watermarks from RAW or standard images locally in your browser. 在浏览器本地从 RAW 或常规图片生成高清摄影相框与 EXIF 水印。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Photo Watermark Frame &amp; EXIF Generator &#x2F; 摄影水印相框与 EXIF 生成器">
+<meta property="og:url" content="https://me0w.org/tools/photo-watermark/index.html">
+<meta property="og:site_name" content="Linked &gt;&gt; Blog">
+<meta property="og:description" content="Create high-resolution photo frames and EXIF watermarks from RAW or standard images locally in your browser. 在浏览器本地从 RAW 或常规图片生成高清摄影相框与 EXIF 水印。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://me0w.org/img/artwork.jpg">
+<meta property="article:published_time" content="2026-09-07T06:31:11.051Z">
+<meta property="article:modified_time" content="2026-09-07T06:31:11.051Z">
+<meta property="article:author" content="Link0327">
+<meta property="article:tag" content="PixelUI Lawrence-Link">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://me0w.org/img/artwork.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://me0w.org/tools/photo-watermark/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0f1115')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f6f7f8')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Photo Watermark Frame & EXIF Generator / 摄影水印相框与 EXIF 生成器',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/pixelui-docs.css"><link rel="stylesheet" href="/css/embedded-lab.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/artwork.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fas fa-wrench"></i><span> Tools</span></a></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> Friends</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.png" alt="Logo"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fas fa-wrench"></i><span> Tools</span></a></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> Friends</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">Photo Watermark Frame &amp; EXIF Generator / 摄影水印相框与 EXIF 生成器</h1></header><main class="layout hide-aside" id="content-inner"><div id="page"><div class="page-title">Photo Watermark Frame &amp; EXIF Generator / 摄影水印相框与 EXIF 生成器</div><div class="container" id="article-container">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Photo Watermark Frame & EXIF Generator",
+  "alternateName": "摄影水印相框与 EXIF 生成器",
+  "url": "https://me0w.org/tools/photo-watermark/index.html",
+  "description": "Create high-resolution photo frames and editable EXIF watermarks from RAW or standard images locally in your browser.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript and Canvas",
+  "isAccessibleForFree": true
+}
+</script>
+
+<section class="watermark-tool" id="photo-watermark-tool" aria-labelledby="watermark-title">
+  <header class="watermark-tool__header">
+    <div>
+      <div class="watermark-tool__eyebrow">LOCAL PHOTO STUDIO / 本地摄影工作台</div>
+      <h2 id="watermark-title">Photo Watermark / 摄影水印</h2>
+    </div>
+    <output class="watermark-tool__status" id="watermark-status" data-state="ready">READY / 就绪</output>
+  </header>
+
+  <div class="watermark-layout">
+    <aside class="watermark-controls" aria-label="Watermark controls / 水印设置">
+      <label class="watermark-drop" id="watermark-drop" for="watermark-file" data-dragging="false">
+        <i class="fas fa-image" aria-hidden="true"></i>
+        <span><strong>Select or drop a photo / 选择或拖入照片</strong><small>RAW · DNG · JPEG · PNG · WebP · HEIC*</small></span>
+      </label>
+      <input class="watermark-visually-hidden" id="watermark-file" type="file" accept="image/*,.3fr,.ari,.arq,.arw,.bay,.cap,.cr2,.cr3,.crw,.dcr,.dcs,.dng,.drf,.eip,.erf,.fff,.gpr,.iiq,.k25,.kdc,.mdc,.mef,.mos,.mrw,.nef,.nrw,.obm,.orf,.pef,.ptx,.pxn,.r3d,.raf,.raw,.rw2,.rwl,.rwz,.sr2,.srf,.srw,.x3f">
+
+      <fieldset class="watermark-fieldset">
+        <legend>LAYOUT / 布局</legend>
+        <div class="watermark-segments" role="radiogroup" aria-label="Frame style / 相框样式">
+          <label><input type="radio" name="watermark-mode" value="card" checked><span>白框</span></label>
+          <label><input type="radio" name="watermark-mode" value="bar"><span>底栏</span></label>
+          <label><input type="radio" name="watermark-mode" value="overlay"><span>悬浮</span></label>
+        </div>
+
+        <label class="watermark-control"><span>底栏高度 <output id="watermark-bar-value">10%</output></span><input id="watermark-bar" type="range" min="6" max="20" value="10"></label>
+        <label class="watermark-control"><span>相框留白 <output id="watermark-frame-value">4%</output></span><input id="watermark-frame" type="range" min="0" max="12" value="4"></label>
+      </fieldset>
+
+      <fieldset class="watermark-fieldset">
+        <legend>IDENTITY / 标识</legend>
+        <label class="watermark-input"><span>品牌 Logo</span><select id="watermark-brand">
+          <option value="none" selected>未识别 / 不显示</option><option value="nikon">Nikon</option><option value="sony">Sony</option><option value="canon">Canon</option>
+          <option value="fujifilm">Fujifilm</option><option value="leica">Leica</option><option value="hasselblad">Hasselblad</option>
+          <option value="apple">Apple</option><option value="xiaomi">Xiaomi</option><option value="text">纯文字 / Text</option>
+          <option value="custom">自定义 SVG / Custom SVG</option>
+        </select></label>
+        <label class="watermark-control"><span>Logo 大小 <output id="watermark-logo-size-value">140%</output></span><input id="watermark-logo-size" type="range" min="80" max="220" step="5" value="140"></label>
+        <label class="watermark-svg-upload" id="watermark-svg-wrap" hidden><span>上传矢量 Logo</span><input id="watermark-svg" type="file" accept="image/svg+xml"></label>
+        <label class="watermark-input"><span>相机品牌 / 型号</span><input id="watermark-camera" type="text" maxlength="80"></label>
+        <label class="watermark-input"><span>镜头型号</span><input id="watermark-lens" type="text" maxlength="120"></label>
+        <div class="watermark-parameters" aria-label="Exposure parameters / 拍摄参数">
+          <label class="watermark-input"><span>焦距</span><input id="watermark-focal" type="text" maxlength="20"></label>
+          <label class="watermark-input"><span>光圈</span><input id="watermark-aperture" type="text" maxlength="20"></label>
+          <label class="watermark-input"><span>快门</span><input id="watermark-shutter" type="text" maxlength="20"></label>
+          <label class="watermark-input"><span>ISO</span><input id="watermark-iso" type="text" maxlength="20"></label>
+        </div>
+        <label class="watermark-control"><span>曝光补偿 Bias <output id="watermark-bias-value"></output></span><input id="watermark-bias" type="range" min="-5" max="5" step="0.1" value="0"></label>
+        <label class="watermark-input"><span>拍摄日期</span><input id="watermark-date" type="text" maxlength="40"></label>
+      </fieldset>
+
+      <fieldset class="watermark-fieldset watermark-fieldset--style">
+        <legend>STYLE / 样式</legend>
+        <label class="watermark-input"><span>字体</span><select id="watermark-font">
+          <option value="Arial, sans-serif">Arial</option><option value="Inter, Arial, sans-serif" selected>Inter</option>
+          <option value="Helvetica, Arial, sans-serif">Helvetica</option><option value="'Segoe UI', Arial, sans-serif">Segoe UI</option>
+          <option value="-apple-system, BlinkMacSystemFont, sans-serif">SF Pro Text</option><option value="'SFMono-Regular', Consolas, monospace">Monospace</option>
+        </select></label>
+        <label class="watermark-control"><span>字体大小 <output id="watermark-font-size-value">100%</output></span><input id="watermark-font-size" type="range" min="70" max="140" step="5" value="100"></label>
+        <div class="watermark-colors">
+          <label><span>背景</span><input id="watermark-background" type="color" value="#ffffff"></label>
+          <label><span>文字</span><input id="watermark-foreground" type="color" value="#111317"></label>
+          <button id="watermark-invert" type="button" title="Invert colors / 反转颜色" aria-label="Invert colors / 反转颜色"><i class="fas fa-circle-half-stroke" aria-hidden="true"></i></button>
+        </div>
+      </fieldset>
+    </aside>
+
+    <section class="watermark-preview" aria-label="Watermark preview / 水印预览">
+      <div class="watermark-canvas-wrap" id="watermark-canvas-wrap" data-empty="true">
+        <div class="watermark-zoom-toolbar" aria-label="Preview zoom / 预览缩放">
+          <button id="watermark-zoom-out" type="button" title="Zoom out / 缩小" aria-label="Zoom out / 缩小" disabled><i class="fas fa-minus" aria-hidden="true"></i></button>
+          <output id="watermark-zoom-value" aria-live="polite">100%</output>
+          <button id="watermark-zoom-in" type="button" title="Zoom in / 放大" aria-label="Zoom in / 放大" disabled><i class="fas fa-plus" aria-hidden="true"></i></button>
+          <button id="watermark-zoom-fit" type="button" title="Fit to window / 适应窗口" aria-label="Fit to window / 适应窗口" disabled><i class="fas fa-expand" aria-hidden="true"></i></button>
+        </div>
+        <canvas id="watermark-canvas" width="1200" height="800"></canvas>
+        <div class="watermark-placeholder" id="watermark-placeholder">
+          <i class="fas fa-camera" aria-hidden="true"></i>
+          <strong>PHOTO PREVIEW</strong>
+          <span>照片将在本地处理，不会上传</span>
+        </div>
+      </div>
+      <div class="watermark-export-bar">
+        <div class="watermark-segments watermark-segments--format" role="radiogroup" aria-label="Export format / 导出格式">
+          <label><input type="radio" name="watermark-format" value="jpeg" checked><span>JPG</span></label>
+          <label><input type="radio" name="watermark-format" value="png"><span>PNG</span></label>
+        </div>
+        <span class="watermark-resolution" id="watermark-resolution">等待照片 / Waiting</span>
+        <button class="watermark-download" id="watermark-download" type="button" disabled><i class="fas fa-download" aria-hidden="true"></i><span>下载高清照片</span></button>
+      </div>
+    </section>
+  </div>
+</section>
+
+<script src="/vendor/exifreader/exif-reader.js"></script>
+<script type="module" src="/js/photo-watermark-tool.mjs"></script>
+
+</div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Link0327</span></div><div class="footer_custom_text"><a class="footer-contact" href="mailto:lawrence@me0w.org" aria-label="Email Lawrence"><i class="fas fa-envelope" aria-hidden="true"></i><span>lawrence@me0w.org</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Toggle Between Traditional and Simplified Chinese">繁</button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="/js/tw_cn.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/me0w-boot.js"></script><script src="/js/site-stats-guard.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

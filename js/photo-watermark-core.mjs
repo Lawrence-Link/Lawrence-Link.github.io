@@ -128,6 +128,27 @@ export const outputDimensions = (width, height, mode, barRatio, frameRatio) => {
   return { width: width + frame * 2, height: height + frame * 2 + bar, frame, bar }
 }
 
+export const wheelZoomFactor = (deltaY, deltaMode = 0, pageHeight = 800, pinchGesture = false) => {
+  const unit = deltaMode === 1 ? 16 : deltaMode === 2 ? Math.max(1, pageHeight) : 1
+  const pixels = Math.min(120, Math.max(-120, Number(deltaY) * unit || 0))
+  const sensitivity = pinchGesture ? 0.002 : 0.0015
+  return Math.exp(-pixels * sensitivity)
+}
+
+export const normalizeOrientation = tag => {
+  const numeric = Number(tagValue(tag))
+  if (Number.isInteger(numeric) && numeric >= 1 && numeric <= 8) return numeric
+  const description = tagDescription(tag).toLowerCase()
+  if (/270(?:°| degrees?)? cw|90(?:°| degrees?)? ccw/.test(description)) return 8
+  if (/90(?:°| degrees?)? cw/.test(description)) return 6
+  if (/180(?:°| degrees?)/.test(description)) return 3
+  return 1
+}
+
+export const orientedImageDimensions = (width, height, orientation) => (
+  orientation >= 5 && orientation <= 8 ? { width: height, height: width } : { width, height }
+)
+
 export const createJpegRangeScanner = () => {
   const ranges = []
   let offset = 0

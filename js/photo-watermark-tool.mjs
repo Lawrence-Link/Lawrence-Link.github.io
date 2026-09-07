@@ -3,8 +3,11 @@ import {
   fitText,
   formatExposureBias,
   mapExifToFields,
+  normalizeOrientation,
+  orientedImageDimensions,
   outputDimensions,
-  RAW_EXTENSIONS
+  RAW_EXTENSIONS,
+  wheelZoomFactor
 } from '/js/photo-watermark-core.mjs'
 
 const root = document.getElementById('photo-watermark-tool')
@@ -25,7 +28,7 @@ if (root) {
     resolution: $('#watermark-resolution'), download: $('#watermark-download')
   }
   const context = elements.canvas.getContext('2d', { alpha: false })
-  const state = { image: null, sourceName: 'photo', customLogo: null, customLogoUrl: '', brandLogos: new Map(), renderToken: 0, hasBias: false, zoom: 1, panX: 0, panY: 0, pointer: null }
+  const state = { image: null, orientation: 1, sourceName: 'photo', customLogo: null, customLogoUrl: '', brandLogos: new Map(), renderToken: 0, hasBias: false, zoom: 1, panX: 0, panY: 0, pointer: null }
   const brandLabels = { none: '', nikon: 'NIKON', sony: 'SONY', canon: 'Canon', fujifilm: 'FUJIFILM', leica: 'Leica', hasselblad: 'HASSELBLAD', apple: 'APPLE', xiaomi: 'XIAOMI', text: '' }
   const logoBrands = new Set(['nikon', 'sony', 'canon', 'fujifilm', 'leica', 'hasselblad', 'apple', 'xiaomi'])
 
@@ -48,7 +51,7 @@ if (root) {
 
   const setPreviewZoom = (zoom, clientX, clientY) => {
     if (!state.image) return
-    const nextZoom = Math.min(4, Math.max(0.5, Math.round(zoom * 20) / 20))
+    const nextZoom = Math.min(4, Math.max(0.5, zoom))
     if (nextZoom === state.zoom) return
     if (Number.isFinite(clientX) && Number.isFinite(clientY)) {
       const bounds = elements.canvasWrap.getBoundingClientRect()
@@ -170,9 +173,29 @@ if (root) {
     return textWidth
   }
 
+  const drawOrientedImage = (image, orientation, x, y) => {
+    const width = image.naturalWidth
+    const height = image.naturalHeight
+    const transforms = {
+      2: [-1, 0, 0, 1, width, 0],
+      3: [-1, 0, 0, -1, width, height],
+      4: [1, 0, 0, -1, 0, height],
+      5: [0, 1, 1, 0, 0, 0],
+      6: [0, 1, -1, 0, height, 0],
+      7: [0, -1, -1, 0, height, width],
+      8: [0, -1, 1, 0, 0, width]
+    }
+    context.save()
+    context.translate(x, y)
+    if (transforms[orientation]) context.transform(...transforms[orientation])
+    context.drawImage(image, 0, 0, width, height)
+    context.restore()
+  }
+
   const drawMetadata = settings => {
     const image = state.image
-    const dimensions = outputDimensions(image.naturalWidth, image.naturalHeight, settings.mode, settings.barRatio, settings.frameRatio)
+    const imageDimensions = orientedImageDimensions(image.naturalWidth, image.naturalHeight, state.orientation)
+    const dimensions = outputDimensions(imageDimensions.width, imageDimensions.height, settings.mode, settings.barRatio, settings.frameRatio)
     elements.canvas.width = dimensions.width
     elements.canvas.height = dimensions.height
 
@@ -181,7 +204,7 @@ if (root) {
     const pad = Math.max(18, 48 * scale)
     context.fillStyle = settings.background
     context.fillRect(0, 0, width, height)
-    context.drawImage(image, frame, frame, image.naturalWidth, image.naturalHeight)
+    drawOrientedImage(image, state.orientation, frame, frame)
 
     const overlay = settings.mode === 'overlay'
     const contentY = overlay ? height - Math.max(112 * scale, height * 0.14) : height - bar
@@ -281,6 +304,7 @@ if (root) {
       .sort((left, right) => right.size - left.size)
 
     let bestPreview = null
+    let bestPreviewBlob = null
     let bestPixels = 0
     for (const range of candidates.slice(0, 12)) {
       try {
@@ -289,11 +313,19 @@ if (root) {
         const pixels = image.naturalWidth * image.naturalHeight
         if (pixels > bestPixels) {
           bestPreview = image
+          bestPreviewBlob = preview
           bestPixels = pixels
         }
       } catch {}
     }
-    if (bestPreview) return bestPreview
+    if (bestPreview) {
+      let embeddedOrientation = 1
+      if (window.ExifReader && bestPreviewBlob) {
+        const previewTags = await window.ExifReader.load(bestPreviewBlob).catch(() => ({}))
+        embeddedOrientation = normalizeOrientation(previewTags.Orientation)
+      }
+      return { image: bestPreview, embeddedOrientation }
+    }
     throw new Error('该 RAW 文件没有浏览器可解码的内嵌 JPEG 预览')
   }
 
@@ -314,13 +346,15 @@ if (root) {
     if (!raw && !file.type.startsWith('image/')) return setStatus('INVALID FILE / 文件无效', 'error')
     setStatus(raw ? 'READING RAW / 解析 RAW' : 'READING EXIF / 读取中', 'busy')
     try {
-      const [image, tags] = raw
+      const [imageResult, tags] = raw
         ? await Promise.all([loadRawPreview(file), parseRawMetadata(file).catch(() => ({}))])
         : await Promise.all([
             loadImage(file),
             window.ExifReader ? window.ExifReader.load(file).catch(() => ({})) : Promise.resolve({})
           ])
-      state.image = image
+      state.image = raw ? imageResult.image : imageResult
+      const rawOrientation = normalizeOrientation(tags.Orientation)
+      state.orientation = raw && imageResult.embeddedOrientation === 1 ? rawOrientation : 1
       state.sourceName = file.name.replace(/\.[^.]+$/, '') || 'photo'
       resetPreviewZoom()
       const fields = mapExifToFields(tags)
@@ -419,7 +453,8 @@ if (root) {
   elements.canvasWrap.addEventListener('wheel', event => {
     if (!state.image) return
     event.preventDefault()
-    setPreviewZoom(state.zoom * (event.deltaY < 0 ? 1.12 : 0.88), event.clientX, event.clientY)
+    const factor = wheelZoomFactor(event.deltaY, event.deltaMode, elements.canvasWrap.clientHeight, event.ctrlKey)
+    setPreviewZoom(state.zoom * factor, event.clientX, event.clientY)
   }, { passive: false })
   elements.canvas.addEventListener('pointerdown', event => {
     if (!state.image) return

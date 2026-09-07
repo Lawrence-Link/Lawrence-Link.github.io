@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RAW EXIF Inspector &amp; Shutter Count / RAW EXIF 检查器与快门次数 | Linked &gt;&gt; Blog</title><meta name="author" content="Link0327"><meta name="copyright" content="Link0327"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0f1115"><meta name="description" content="Free browser-based RAW&#x2F;JPEG EXIF Inspector and shutter count checker with A-D grading. 在线检查 EXIF、快门次数和 A-D 评级，文件仅在本地解析。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RAW EXIF Inspector &amp; Shutter Count &#x2F; RAW EXIF 检查器与快门次数">
+<meta property="og:url" content="https://me0w.org/tools/exif-inspector/index.html">
+<meta property="og:site_name" content="Linked &gt;&gt; Blog">
+<meta property="og:description" content="Free browser-based RAW&#x2F;JPEG EXIF Inspector and shutter count checker with A-D grading. 在线检查 EXIF、快门次数和 A-D 评级，文件仅在本地解析。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://me0w.org/img/artwork.jpg">
+<meta property="article:published_time" content="2026-09-07T09:46:51.918Z">
+<meta property="article:modified_time" content="2026-09-07T09:46:51.918Z">
+<meta property="article:author" content="Link0327">
+<meta property="article:tag" content="PixelUI Lawrence-Link">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://me0w.org/img/artwork.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://me0w.org/tools/exif-inspector/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0f1115')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f6f7f8')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RAW EXIF Inspector & Shutter Count / RAW EXIF 检查器与快门次数',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/pixelui-docs.css"><link rel="stylesheet" href="/css/embedded-lab.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/artwork.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fas fa-wrench"></i><span> Tools</span></a></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> Friends</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.png" alt="Logo"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/pixelui/"><i class="fa-fw fas fa-book"></i><span> PixelUI Docs</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fas fa-wrench"></i><span> Tools</span></a></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> Friends</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">RAW EXIF Inspector &amp; Shutter Count / RAW EXIF 检查器与快门次数</h1></header><main class="layout hide-aside" id="content-inner"><div id="page"><div class="page-title">RAW EXIF Inspector &amp; Shutter Count / RAW EXIF 检查器与快门次数</div><div class="container" id="article-container">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "RAW EXIF Inspector & Shutter Count Checker",
+  "alternateName": "RAW EXIF 检查器与快门次数查询工具",
+  "url": "https://me0w.org/tools/exif-inspector/index.html",
+  "description": "Inspect RAW and JPEG EXIF metadata, camera shutter count, and A-D shutter usage grade privately in your browser.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript and WebAssembly",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "RAW and JPEG EXIF metadata inspection",
+    "Camera shutter count detection",
+    "A-D shutter usage grading",
+    "Local browser-only file processing"
+  ]
+}
+</script>
+<section class="raw-tool" id="raw-exif-tool" aria-labelledby="raw-tool-title">
+  <header class="raw-tool__header">
+    <div>
+      <div class="raw-tool__eyebrow">LOCAL METADATA CONSOLE / 本地元数据控制台</div>
+      <h2 id="raw-tool-title">RAW EXIF Inspector / RAW EXIF 检查器</h2>
+    </div>
+    <div class="raw-tool__header-actions">
+      <a class="raw-command-button" href="/tools/"><i class="fas fa-table-cells-large" aria-hidden="true"></i><span>Tools / 工具目录</span></a>
+      <output class="raw-tool__status" id="raw-tool-status" data-state="ready">READY / 就绪</output>
+    </div>
+  </header>
+
+  <p class="raw-tool__intro">
+    Free RAW/JPEG EXIF Inspector for viewing camera metadata, detecting shutter count, and estimating shutter usage with an A-D grade. Everything runs locally in your browser, so your photos are never uploaded.<br>
+    免费的 RAW/JPEG EXIF 检查器，可查看相机元数据、检测快门次数，并按 A-D 评级估算快门使用程度。所有解析均在浏览器本地完成，照片不会上传。
+  </p>
+
+  <label class="raw-drop-zone" id="raw-drop-zone" data-dragging="false" for="raw-file-input">
+    <span class="raw-drop-zone__icon"><i class="fas fa-file-arrow-up" aria-hidden="true"></i></span>
+    <span class="raw-drop-zone__copy">
+      <strong>Select RAW files / 选择 RAW 文件</strong>
+      <small>CR2 · CR3 · NEF · ARW · RAF · ORF · RW2 · DNG · TIFF · JPEG</small>
+    </span>
+    <span class="raw-drop-zone__privacy">LOCAL ONLY / 仅本地解析</span>
+  </label>
+  <input class="raw-tool__input" id="raw-file-input" type="file" multiple accept=".3fr,.arw,.cr2,.cr3,.dng,.erf,.fff,.iiq,.kdc,.mef,.mos,.mrw,.nef,.nrw,.orf,.pef,.raf,.raw,.rw2,.rwl,.sr2,.srf,.srw,.x3f,.heic,.heif,.jpeg,.jpg,.tif,.tiff">
+
+  <div class="raw-shutter-settings">
+    <label for="raw-shutter-limit">
+      <span>MAX SHUTTER COUNT / 最大快门次数</span>
+      <small>Used to calculate A-D condition grade / 用于计算 A-D 状态评级</small>
+    </label>
+    <input id="raw-shutter-limit" type="number" min="1000" step="10000" value="200000" inputmode="numeric" aria-label="Maximum shutter count / 最大快门次数">
+  </div>
+
+  <div class="raw-progress" id="raw-progress" hidden><span id="raw-progress-bar"></span></div>
+
+  <div class="raw-tool__actions" id="raw-actions" hidden>
+    <button class="raw-icon-button" id="raw-clear" type="button" title="Clear results / 清空结果" aria-label="Clear results / 清空结果"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+    <button class="raw-command-button" id="raw-export" type="button"><i class="fas fa-download" aria-hidden="true"></i><span>Export JSON / 导出 JSON</span></button>
+  </div>
+
+  <section class="raw-summary" id="raw-summary" aria-label="Parse summary / 解析汇总" hidden>
+    <div><span>FILES / 文件</span><strong id="raw-file-count">0</strong><small>Parsed / 成功解析</small></div>
+    <div><span>CAMERAS / 相机</span><strong id="raw-camera-count">0</strong><small>Camera bodies / 机身数量</small></div>
+    <div class="raw-summary__shutter"><span>SHUTTER COUNT / 快门次数</span><strong id="raw-shutter-total">--</strong><small id="raw-shutter-note">Waiting / 等待解析</small></div>
+    <div class="raw-summary__grade" data-grade="unknown"><span>GRADE / 评级</span><strong id="raw-shutter-grade">--</strong><small id="raw-shutter-grade-note">Set a maximum / 请设置上限</small></div>
+  </section>
+
+  <div class="raw-workspace" id="raw-workspace" hidden>
+    <nav class="raw-file-list" aria-label="Parsed files / 已解析文件">
+      <div class="raw-file-list__label">FILES / 文件</div>
+      <ul id="raw-files"></ul>
+    </nav>
+
+    <section class="raw-details" id="raw-details">
+      <header class="raw-details__header">
+        <div>
+          <h3 id="raw-detail-title"></h3>
+          <p id="raw-detail-meta"></p>
+        </div>
+      </header>
+
+      <div class="raw-overview" id="raw-overview"></div>
+
+      <div class="raw-filter-bar">
+        <label class="raw-search">
+          <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+          <input id="raw-search" type="search" placeholder="Search tags or values / 搜索标签或值" aria-label="Search tags or values / 搜索标签或值">
+        </label>
+        <select id="raw-group" aria-label="Filter metadata groups / 筛选元数据分组"><option value="all">All groups / 全部分组</option></select>
+      </div>
+
+      <div class="raw-tag-table-wrap">
+        <table class="raw-tag-table">
+          <thead><tr><th scope="col">TAG / 标签</th><th scope="col">VALUE / 值</th></tr></thead>
+          <tbody id="raw-tag-rows"></tbody>
+        </table>
+        <p class="raw-empty-tags" id="raw-empty-tags" hidden>No matching tags / 没有匹配的标签</p>
+      </div>
+    </section>
+  </div>
+</section>
+
+<script type="module" src="/js/raw-exif-tool.mjs"></script>
+
+</div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Link0327</span></div><div class="footer_custom_text"><a class="footer-contact" href="mailto:lawrence@me0w.org" aria-label="Email Lawrence"><i class="fas fa-envelope" aria-hidden="true"></i><span>lawrence@me0w.org</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Toggle Between Traditional and Simplified Chinese">繁</button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="/js/tw_cn.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/me0w-boot.js"></script><script src="/js/site-stats-guard.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

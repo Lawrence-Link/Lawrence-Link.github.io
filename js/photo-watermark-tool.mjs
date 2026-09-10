@@ -321,8 +321,11 @@ if (root) {
     if (bestPreview) {
       let embeddedOrientation = 1
       if (window.ExifReader && bestPreviewBlob) {
-        const previewTags = await window.ExifReader.load(bestPreviewBlob).catch(() => ({}))
-        embeddedOrientation = normalizeOrientation(previewTags.Orientation)
+        try {
+          const previewBuffer = await bestPreviewBlob.arrayBuffer()
+          const previewTags = await window.ExifReader.load(previewBuffer)
+          embeddedOrientation = normalizeOrientation(previewTags.Orientation)
+        } catch {}
       }
       return { image: bestPreview, embeddedOrientation }
     }

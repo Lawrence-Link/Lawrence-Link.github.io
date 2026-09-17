@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Numeric Values | Linked &gt;&gt; Blog</title><meta name="author" content="Link0327"><meta name="copyright" content="Link0327"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0f1115"><meta name="description" content="Docs home   Quick start   Architecture   Lifecycle   GitHub   中文English   PixelUI keeps numeric state, editing transactions, presentation, and drawing separate. The shared layer uses int32_t valu">
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Numeric Values | Linked &gt;&gt; Blog</title><meta name="author" content="Link0327"><meta name="copyright" content="Link0327"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0f1115"><meta name="description" content="Docs home   Quick start   Architecture   Lifecycle   GitHub   中文English   PixelUI separates numeric presentation from component drawing. The numeric APIs below provide validated ranges, allocatio">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Numeric Values">
 <meta property="og:url" content="https://me0w.org/en/pixelui/numeric-values/index.html">
 <meta property="og:site_name" content="Linked &gt;&gt; Blog">
-<meta property="og:description" content="Docs home   Quick start   Architecture   Lifecycle   GitHub   中文English   PixelUI keeps numeric state, editing transactions, presentation, and drawing separate. The shared layer uses int32_t valu">
+<meta property="og:description" content="Docs home   Quick start   Architecture   Lifecycle   GitHub   中文English   PixelUI separates numeric presentation from component drawing. The numeric APIs below provide validated ranges, allocatio">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://me0w.org/img/artwork.jpg">
-<meta property="article:published_time" content="2026-08-16T16:19:51.236Z">
-<meta property="article:modified_time" content="2026-08-16T16:19:51.236Z">
+<meta property="article:published_time" content="2026-09-17T05:39:35.688Z">
+<meta property="article:modified_time" content="2026-09-17T05:39:35.688Z">
 <meta property="article:author" content="Link0327">
 <meta property="article:tag" content="PixelUI Lawrence-Link">
 <meta name="twitter:card" content="summary">
@@ -155,21 +155,245 @@
   <div class="pixelui-language-switch" aria-label="Language"><a href="/pixelui/numeric-values/">中文</a><span aria-current="page">English</span></div>
 </nav>
 
-<p>PixelUI keeps numeric state, editing transactions, presentation, and drawing separate. The shared layer uses <code>int32_t</code> values, fixed-capacity storage, and integer arithmetic.</p>
-<h2 id="Range-and-normalization"><a href="#Range-and-normalization" class="headerlink" title="Range and normalization"></a>Range and normalization</h2><p>Create a <code>NumericRange</code> through its validating factory:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NumericRange range;</span><br><span class="line"><span class="keyword">if</span> (!NumericRange::tryCreate(<span class="number">-40</span>, <span class="number">120</span>, <span class="number">5</span>, range)) &#123;</span><br><span class="line">    <span class="comment">// minimum &gt; maximum or step &lt;= 0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>PixelUI separates numeric presentation from component drawing. The numeric APIs below provide validated ranges, allocation-free formatting, bindings, and edit transactions.</p>
+<h2 id="Range-and-normalization"><a href="#Range-and-normalization" class="headerlink" title="Range and normalization"></a>Range and normalization</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NumericRange range;</span><br><span class="line"><span class="keyword">if</span> (!NumericRange::tryCreate(<span class="number">-40</span>, <span class="number">120</span>, <span class="number">5</span>, range)) &#123;</span><br><span class="line">    <span class="comment">// minimum &gt; maximum or step &lt;= 0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>clamp()</code>, <code>canIncrement()</code>, <code>canDecrement()</code>, <code>incremented()</code>, and <code>decremented()</code> are saturating. A final step that does not divide the range exactly lands on the boundary. <code>normalizeToExtent(range, value, pixels)</code> maps a clamped value to an integer pixel extent with nearest-integer rounding. These operations are safe across the full <code>INT32_MIN</code> to <code>INT32_MAX</code> range.</p>
-<p><code>tryCreate()</code> returns <code>false</code> for <code>minimum &gt; maximum</code> or <code>step &lt;= 0</code> and leaves the output object unchanged. Check that result before retaining or passing the range.</p>
-<h2 id="Formatting"><a href="#Formatting" class="headerlink" title="Formatting"></a>Formatting</h2><p><code>NumericFormatter</code> formats the value passed to it; it does not own or read application state. Built-in policies cover integers, zero padding, scaled integers, suffixes, and percentages:</p>
+<table>
+<thead>
+<tr>
+<th align="left">API</th>
+<th align="left">Signature</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Constructor</td>
+<td align="left"><code>constexpr NumericRange()</code></td>
+<td align="left">Creates the default range <code>[0, 100]</code> with step <code>1</code>.</td>
+</tr>
+<tr>
+<td align="left">Static factory</td>
+<td align="left"><code>static constexpr bool tryCreate(int32_t minimum, int32_t maximum, int32_t step, NumericRange&amp; output)</code></td>
+<td align="left">Validates <code>minimum &lt;= maximum</code> and <code>step &gt; 0</code>. On success, writes the range to <code>output</code> and returns <code>true</code>.</td>
+</tr>
+<tr>
+<td align="left">Getter</td>
+<td align="left"><code>constexpr int32_t minimum() const</code></td>
+<td align="left">Returns the lower bound.</td>
+</tr>
+<tr>
+<td align="left">Getter</td>
+<td align="left"><code>constexpr int32_t maximum() const</code></td>
+<td align="left">Returns the upper bound.</td>
+</tr>
+<tr>
+<td align="left">Getter</td>
+<td align="left"><code>constexpr int32_t step() const</code></td>
+<td align="left">Returns the step size.</td>
+</tr>
+<tr>
+<td align="left">Constraint</td>
+<td align="left"><code>constexpr int32_t clamp(int32_t value) const</code></td>
+<td align="left">Clamps a value to the closed interval <code>[minimum, maximum]</code>.</td>
+</tr>
+<tr>
+<td align="left">State query</td>
+<td align="left"><code>constexpr bool canIncrement(int32_t value) const</code></td>
+<td align="left">Reports whether the clamped value is below the upper bound.</td>
+</tr>
+<tr>
+<td align="left">State query</td>
+<td align="left"><code>constexpr bool canDecrement(int32_t value) const</code></td>
+<td align="left">Reports whether the clamped value is above the lower bound.</td>
+</tr>
+<tr>
+<td align="left">Arithmetic</td>
+<td align="left"><code>constexpr int32_t incremented(int32_t value) const</code></td>
+<td align="left">Adds one step with overflow protection and upper-bound saturation.</td>
+</tr>
+<tr>
+<td align="left">Arithmetic</td>
+<td align="left"><code>constexpr int32_t decremented(int32_t value) const</code></td>
+<td align="left">Subtracts one step with overflow protection and lower-bound saturation.</td>
+</tr>
+<tr>
+<td align="left">Free function</td>
+<td align="left"><code>constexpr uint32_t normalizeToExtent(const NumericRange&amp; range, int32_t value, uint32_t extent)</code></td>
+<td align="left">Maps the value’s position in the range to <code>[0, extent]</code> with nearest-integer rounding.</td>
+</tr>
+</tbody></table>
+<p><code>clamp()</code>, <code>canIncrement()</code>, <code>canDecrement()</code>, <code>incremented()</code>, and <code>decremented()</code> are saturating. An uneven final step lands directly on the boundary. <code>normalizeToExtent(range, value, pixels)</code> maps a clamped value to an integer pixel extent with nearest-integer rounding. These operations are safe across the full <code>INT32_MIN</code> to <code>INT32_MAX</code> range.</p>
+<p><code>tryCreate()</code> returns <code>false</code> for <code>minimum &gt; maximum</code> or <code>step &lt;= 0</code>. Check the result before retaining or passing the range.</p>
+<h2 id="Formatting"><a href="#Formatting" class="headerlink" title="Formatting"></a>Formatting</h2><p><code>NumericFormatter</code> formats the value supplied to each call. Built-in policies cover integers, zero padding, scaled integers, suffixes, and percentages:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IntegerFormat padded&#123;<span class="number">3</span>, <span class="literal">nullptr</span>&#125;;</span><br><span class="line">NumericFormatter digits = NumericFormatter::<span class="built_in">integer</span>(padded); <span class="comment">// -7 -&gt; &quot;-007&quot;</span></span><br><span class="line"></span><br><span class="line">ScaledIntegerFormat volts&#123;<span class="number">10</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="string">&quot; V&quot;</span>&#125;;</span><br><span class="line">NumericFormatter voltage = NumericFormatter::<span class="built_in">scaled</span>(volts);  <span class="comment">// -7 -&gt; &quot;-0.7 V&quot;</span></span><br><span class="line"></span><br><span class="line">PercentageFormat percentage&#123;&amp;range, <span class="string">&quot;%&quot;</span>&#125;;</span><br><span class="line">NumericFormatter percent = NumericFormatter::<span class="built_in">percentage</span>(percentage);</span><br></pre></td></tr></table></figure>
 
-<p>Formatting is allocation-free. <code>format()</code> returns <code>false</code> when the formatter is invalid or the destination is too small; a non-empty destination is reset to an empty string on failure. Use <code>FixedBufferWriter::appendInteger()</code> when composing text such as <code>current/total</code> instead of introducing a separate conversion routine.</p>
+<p>Formatting is allocation-free. <code>format()</code> returns <code>false</code> when the formatter is invalid or the destination is too small; a non-empty destination is reset to an empty string on failure. Use <code>FixedBufferWriter::appendInteger()</code> to compose text such as <code>current/total</code>.</p>
 <p>The formatter stores only a function pointer and a non-owning context pointer. Every referenced format object, suffix string, percentage range, or custom context must outlive all calls through that formatter. A local formatter is safe for immediate formatting; a formatter retained by a Widget or queued Popup must refer to static storage or persistent App members.</p>
 <p>Declare retained dependencies before their formatter so reverse member destruction keeps them alive:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NumericRange temperatureRange_&#123;&#125;;</span><br><span class="line">ScaledIntegerFormat temperatureFormat_&#123;<span class="number">10</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="string">&quot; C&quot;</span>&#125;;</span><br><span class="line">NumericFormatter temperatureFormatter_ =</span><br><span class="line">    NumericFormatter::<span class="built_in">scaled</span>(temperatureFormat_);</span><br></pre></td></tr></table></figure>
 
-<h2 id="Binding-and-edit-session"><a href="#Binding-and-edit-session" class="headerlink" title="Binding and edit session"></a>Binding and edit session</h2><p><code>ValueEditorBinding</code> is only a non-owning read&#x2F;write&#x2F;notification boundary. <code>ValueEditSession</code> owns the transaction state: its original value, draft value, and policy.</p>
+<h3 id="Formatter-API"><a href="#Formatter-API" class="headerlink" title="Formatter API"></a>Formatter API</h3><table>
+<thead>
+<tr>
+<th align="left">Module &#x2F; class</th>
+<th align="left">Signature</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FixedBufferWriter</code></td>
+<td align="left"><code>FixedBufferWriter(char* buffer, size_t capacity)</code></td>
+<td align="left">Binds an externally owned fixed buffer and its total capacity.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>bool append(const char* text)</code></td>
+<td align="left">Appends a null-terminated string. Returns <code>false</code> and records failure when capacity is insufficient.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>bool appendCharacter(char character)</code></td>
+<td align="left">Appends one character.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>bool appendInteger(int32_t value, uint8_t minimumDigits = 1U)</code></td>
+<td align="left">Appends a signed 32-bit integer with optional leading-zero padding.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>bool appendUnsigned(uint32_t value, uint8_t minimumDigits = 1U)</code></td>
+<td align="left">Appends an unsigned 32-bit integer with optional leading-zero padding.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>bool finish()</code></td>
+<td align="left">Writes the terminating <code>\0</code> and returns <code>true</code> when the complete operation succeeded.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>bool valid() const</code></td>
+<td align="left">Reports whether all writes have remained within the buffer.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>size_t size() const</code></td>
+<td align="left">Returns the number of written characters, excluding the terminating <code>\0</code>.</td>
+</tr>
+<tr>
+<td align="left"><code>NumericFormatter</code></td>
+<td align="left"><code>static constexpr NumericFormatter custom(const void* context, FormatFunction function)</code></td>
+<td align="left">Creates a formatter from a context pointer and formatting function.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>static constexpr NumericFormatter integer()</code></td>
+<td align="left">Creates the default integer formatter.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>static constexpr NumericFormatter integer(const IntegerFormat&amp; format)</code></td>
+<td align="left">Creates an integer formatter from the supplied configuration.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>static constexpr NumericFormatter scaled(const ScaledIntegerFormat&amp; format)</code></td>
+<td align="left">Creates a fixed-point formatter with scale and fractional digits.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>static constexpr NumericFormatter percentage(const PercentageFormat&amp; format)</code></td>
+<td align="left">Creates a percentage formatter based on a <code>NumericRange</code>.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>bool format(int32_t value, char* buffer, size_t bufferSize) const</code></td>
+<td align="left">Formats <code>value</code> into the destination buffer.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>constexpr bool valid() const</code></td>
+<td align="left">Reports whether a formatting function is bound.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>constexpr const void* context() const</code></td>
+<td align="left">Returns the bound context pointer.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>constexpr FormatFunction function() const</code></td>
+<td align="left">Returns the bound formatting function.</td>
+</tr>
+</tbody></table>
+<h3 id="Format-configuration"><a href="#Format-configuration" class="headerlink" title="Format configuration"></a>Format configuration</h3><table>
+<thead>
+<tr>
+<th align="left">Structure</th>
+<th align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Default</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>IntegerFormat</code></td>
+<td align="left"><code>minimumDigits</code></td>
+<td align="left"><code>uint8_t</code></td>
+<td align="left"><code>1U</code></td>
+<td align="left">Minimum digit count, padded with leading zeros.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>suffix</code></td>
+<td align="left"><code>const char*</code></td>
+<td align="left"><code>nullptr</code></td>
+<td align="left">Optional suffix such as <code>&quot;px&quot;</code> or <code>&quot;ms&quot;</code>.</td>
+</tr>
+<tr>
+<td align="left"><code>ScaledIntegerFormat</code></td>
+<td align="left"><code>scale</code></td>
+<td align="left"><code>uint32_t</code></td>
+<td align="left"><code>1U</code></td>
+<td align="left">Scale factor; for example, <code>100</code> formats <code>1234</code> as <code>12.34</code>.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>fractionalDigits</code></td>
+<td align="left"><code>uint8_t</code></td>
+<td align="left"><code>0U</code></td>
+<td align="left">Number of fractional digits.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>minimumIntegerDigits</code></td>
+<td align="left"><code>uint8_t</code></td>
+<td align="left"><code>1U</code></td>
+<td align="left">Minimum integer-part digit count, padded with leading zeros.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>suffix</code></td>
+<td align="left"><code>const char*</code></td>
+<td align="left"><code>nullptr</code></td>
+<td align="left">Optional suffix.</td>
+</tr>
+<tr>
+<td align="left"><code>PercentageFormat</code></td>
+<td align="left"><code>range</code></td>
+<td align="left"><code>const NumericRange*</code></td>
+<td align="left"><code>nullptr</code></td>
+<td align="left">Range used for percentage normalization.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>suffix</code></td>
+<td align="left"><code>const char*</code></td>
+<td align="left"><code>&quot;%&quot;</code></td>
+<td align="left">Percentage suffix.</td>
+</tr>
+</tbody></table>
+<h2 id="Binding-and-edit-session"><a href="#Binding-and-edit-session" class="headerlink" title="Binding and edit session"></a>Binding and edit session</h2><p><code>ValueEditorBinding</code> defines a non-owning read, write, and notification boundary. <code>ValueEditSession</code> stores the transaction’s original value, draft value, and editing policy.</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">changed</span><span class="params">(<span class="type">void</span>* context, <span class="type">int32_t</span> value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static_cast</span>&lt;Settings*&gt;(context)-&gt;brightness = value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ValueEditorBinding binding =</span><br><span class="line">    ValueEditorBinding::<span class="built_in">reference</span>(brightness_, &amp;changed, <span class="keyword">this</span>);</span><br><span class="line"><span class="function">ValueEditSession <span class="title">edit</span><span class="params">(binding, ValueEditPolicy::CommitOnConfirm)</span></span>;</span><br></pre></td></tr></table></figure>
 
 <p>With <code>CommitOnConfirm</code>, draft changes remain inside the session until <code>commit()</code> writes and notifies; <code>cancel()</code> discards the draft. With <code>Live</code>, each successful <code>setDraftValue()</code> writes and notifies immediately; <code>cancel()</code> restores the original value and notifies that restoration. A session constructed from an initial integer has no external binding but follows the same draft&#x2F;commit&#x2F;cancel path.</p>
@@ -197,17 +421,69 @@
 <td>Restore and notify the original value if changed</td>
 </tr>
 </tbody></table>
-<p>All three operations return <code>false</code> when the session is invalid or a required write fails. A failed write does not advance the transaction state; the caller should keep the editor open or restore its visible controls from <code>draftValue()</code>.</p>
+<p>All three operations return <code>false</code> when the session is invalid or a required write fails. A failed write preserves the current transaction state; the caller should keep the editor open or restore its visible controls from <code>draftValue()</code>.</p>
 <p>Binding value and changed contexts are non-owning and must outlive the session and every operation performed through it. A Popup request that copies the binding extends this requirement through both its pending and active lifetime.</p>
-<h2 id="Component-responsibilities"><a href="#Component-responsibilities" class="headerlink" title="Component responsibilities"></a>Component responsibilities</h2><ul>
-<li><code>NumScroll</code> uses <code>NumericRange</code> for stepping and <code>NumericFormatter</code> for labels. Use <code>setRange(min, max, step)</code> or <code>setRange(range)</code>, and <code>setFormatter(formatter)</code>. Zero padding is a formatter policy; <code>setFixedIntDigits()</code> no longer exists.</li>
+<h3 id="Scaled-integer-formatting-function"><a href="#Scaled-integer-formatting-function" class="headerlink" title="Scaled integer formatting function"></a>Scaled integer formatting function</h3><table>
+<thead>
+<tr>
+<th align="left">Signature</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>bool formatScaledInteger(char* buffer, size_t bufferSize, int32_t raw, uint32_t scale, uint8_t fractionalDigits, const char* suffix = nullptr)</code></td>
+<td align="left">Formats the fixed-point value <code>raw</code> with the supplied scale, fractional digit count, and optional suffix.</td>
+</tr>
+</tbody></table>
+<h3 id="PixelUIValue-Binding-API"><a href="#PixelUIValue-Binding-API" class="headerlink" title="PixelUIValue::Binding API"></a><code>PixelUIValue::Binding</code> API</h3><table>
+<thead>
+<tr>
+<th align="left">Signature</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>constexpr Binding()</code></td>
+<td align="left">Creates an empty binding.</td>
+</tr>
+<tr>
+<td align="left"><code>static constexpr Binding custom(const void* object, FormatFunction formatter, const char* suffix = nullptr)</code></td>
+<td align="left">Binds an object pointer, custom formatter, and optional suffix.</td>
+</tr>
+<tr>
+<td align="left"><code>static constexpr Binding integer(const int32_t&amp; value, const char* suffix = nullptr)</code></td>
+<td align="left">Binds an <code>int32_t</code> value for integer formatting.</td>
+</tr>
+<tr>
+<td align="left"><code>template &lt;uint8_t FractionalDigits, int32_t Scale&gt; static constexpr Binding decimal(const ScaledInt32&lt;Scale&gt;&amp; value, const char* suffix = nullptr)</code></td>
+<td align="left">Binds a <code>ScaledInt32&lt;Scale&gt;</code> value with up to nine fractional digits.</td>
+</tr>
+<tr>
+<td align="left"><code>bool format(char* buffer, size_t bufferSize) const</code></td>
+<td align="left">Formats the bound value into <code>buffer</code>; failures clear a non-empty destination and return <code>false</code>.</td>
+</tr>
+<tr>
+<td align="left"><code>constexpr const void* object() const</code></td>
+<td align="left">Returns the bound object pointer.</td>
+</tr>
+<tr>
+<td align="left"><code>constexpr FormatFunction formatter() const</code></td>
+<td align="left">Returns the formatting function.</td>
+</tr>
+<tr>
+<td align="left"><code>constexpr const char* suffix() const</code></td>
+<td align="left">Returns the suffix pointer.</td>
+</tr>
+</tbody></table>
+<h2 id="Component-examples"><a href="#Component-examples" class="headerlink" title="Component examples"></a>Component examples</h2><ul>
+<li><code>NumScroll</code> uses <code>NumericRange</code> for stepping and <code>NumericFormatter</code> for labels. Configure it with <code>setRange(min, max, step)</code> or <code>setRange(range)</code>, followed by <code>setFormatter(formatter)</code>. Configure zero padding through the formatter.</li>
 <li><code>PopupProgress</code> maps LEFT&#x2F;RIGHT through <code>range.step()</code>, normalizes only the bar geometry, and delegates displayed text to the formatter.</li>
-<li><code>PopupValueDigits</code> uses a <code>ValueEditSession</code>; construction does not modify the external value. SELECT on a digit only finishes that digit’s local edit, allowing other digits to be changed. The OK button commits the whole session; CANCEL or BACK cancels it.</li>
+<li><code>PopupValueDigits</code> uses a <code>ValueEditSession</code>; construction leaves the external value unchanged. SELECT on a digit finishes that digit’s local edit while keeping the session open for other digits. The OK button commits the whole session; CANCEL or BACK cancels it.</li>
 </ul>
-</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/artwork.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Link0327</div><div class="author-info-description">汪🐱me0w, but furry wolf. 尝试变得毛茸茸</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Lawrence-Link"><i class="fab fa-github"></i><span>Link's Github</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Lawrence-Link" target="_blank" title="Github"><i class="fab fa-github" style="color: #52789d;"></i></a><a class="social-icon" href="mailto:lawrence@me0w.org" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #52789d;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Range-and-normalization"><span class="toc-number">1.</span> <span class="toc-text">Range and normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Formatting"><span class="toc-number">2.</span> <span class="toc-text">Formatting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Binding-and-edit-session"><span class="toc-number">3.</span> <span class="toc-text">Binding and edit session</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Component-responsibilities"><span class="toc-number">4.</span> <span class="toc-text">Component responsibilities</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/09/26sep9-new-d750/" title="I bought a second-handed Nikon D750"><img src="/img/camera-d750/front_cam_body.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="I bought a second-handed Nikon D750"/></a><div class="content"><a class="title" href="/2026/09/09/26sep9-new-d750/" title="I bought a second-handed Nikon D750">I bought a second-handed Nikon D750</a><time datetime="2026-09-09T14:57:52.153Z" title="Created 2026-09-09 22:57:52">2026-09-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/17/26aug17-has-pui-docs/" title="PixelUI docs are out!"><img src="/img/bg_02.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PixelUI docs are out!"/></a><div class="content"><a class="title" href="/2026/08/17/26aug17-has-pui-docs/" title="PixelUI docs are out!">PixelUI docs are out!</a><time datetime="2026-08-17T01:17:52.153Z" title="Created 2026-08-17 09:17:52">2026-08-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/29/26may29-future-of-pixelui/" title="The Future of the PixelUI beta"><img src="/img/bg_01.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="The Future of the PixelUI beta"/></a><div class="content"><a class="title" href="/2026/05/29/26may29-future-of-pixelui/" title="The Future of the PixelUI beta">The Future of the PixelUI beta</a><time datetime="2026-05-29T01:17:52.153Z" title="Created 2026-05-29 09:17:52">2026-05-29</time></div></div></div></div><div class="card-widget card-archives">
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/artwork.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Link0327</div><div class="author-info-description">汪🐱me0w, but furry wolf. 尝试变得毛茸茸</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Lawrence-Link"><i class="fab fa-github"></i><span>Link's Github</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Lawrence-Link" target="_blank" title="Github"><i class="fab fa-github" style="color: #52789d;"></i></a><a class="social-icon" href="mailto:lawrence@me0w.org" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #52789d;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Range-and-normalization"><span class="toc-number">1.</span> <span class="toc-text">Range and normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Formatting"><span class="toc-number">2.</span> <span class="toc-text">Formatting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Formatter-API"><span class="toc-number">2.1.</span> <span class="toc-text">Formatter API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Format-configuration"><span class="toc-number">2.2.</span> <span class="toc-text">Format configuration</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Binding-and-edit-session"><span class="toc-number">3.</span> <span class="toc-text">Binding and edit session</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Scaled-integer-formatting-function"><span class="toc-number">3.1.</span> <span class="toc-text">Scaled integer formatting function</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PixelUIValue-Binding-API"><span class="toc-number">3.2.</span> <span class="toc-text">PixelUIValue::Binding API</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Component-examples"><span class="toc-number">4.</span> <span class="toc-text">Component examples</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/09/26sep9-new-d750/" title="I bought a second-handed Nikon D750"><img src="/img/camera-d750/front_cam_body.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="I bought a second-handed Nikon D750"/></a><div class="content"><a class="title" href="/2026/09/09/26sep9-new-d750/" title="I bought a second-handed Nikon D750">I bought a second-handed Nikon D750</a><time datetime="2026-09-09T14:57:52.153Z" title="发表于 2026-09-09 22:57:52">2026-09-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/17/26aug17-has-pui-docs/" title="PixelUI docs are out!"><img src="/img/bg_02.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PixelUI docs are out!"/></a><div class="content"><a class="title" href="/2026/08/17/26aug17-has-pui-docs/" title="PixelUI docs are out!">PixelUI docs are out!</a><time datetime="2026-08-17T01:17:52.153Z" title="发表于 2026-08-17 09:17:52">2026-08-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/29/26may29-future-of-pixelui/" title="The Future of the PixelUI beta"><img src="/img/bg_01.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="The Future of the PixelUI beta"/></a><div class="content"><a class="title" href="/2026/05/29/26may29-future-of-pixelui/" title="The Future of the PixelUI beta">The Future of the PixelUI beta</a><time datetime="2026-05-29T01:17:52.153Z" title="发表于 2026-05-29 09:17:52">2026-05-29</time></div></div></div></div><div class="card-widget card-archives">
     <div class="item-headline">
       <i class="fas fa-archive"></i>
-      <span>Archives</span>
+      <span>归档</span>
       
     </div>
   
@@ -216,7 +492,7 @@
         <li class="card-archive-list-item">
           <a class="card-archive-list-link" href="/archives/2026/09/">
             <span class="card-archive-list-date">
-              September 2026
+              九月 2026
             </span>
             <span class="card-archive-list-count">1</span>
           </a>
@@ -225,7 +501,7 @@
         <li class="card-archive-list-item">
           <a class="card-archive-list-link" href="/archives/2026/08/">
             <span class="card-archive-list-date">
-              August 2026
+              八月 2026
             </span>
             <span class="card-archive-list-count">1</span>
           </a>
@@ -234,11 +510,11 @@
         <li class="card-archive-list-item">
           <a class="card-archive-list-link" href="/archives/2026/05/">
             <span class="card-archive-list-date">
-              May 2026
+              五月 2026
             </span>
             <span class="card-archive-list-count">1</span>
           </a>
         </li>
       
     </ul>
-  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">3</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-09-17T05:00:46.128Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Link0327</span></div><div class="footer_custom_text"><a class="footer-contact" href="mailto:lawrence@me0w.org" aria-label="Email Lawrence"><i class="fas fa-envelope" aria-hidden="true"></i><span>lawrence@me0w.org</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Toggle Between Traditional and Simplified Chinese">繁</button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="/js/tw_cn.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/me0w-boot.js"></script><script src="/js/site-stats-guard.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">3</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-09-17T06:06:05.514Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Link0327</span></div><div class="footer_custom_text"><a class="footer-contact" href="mailto:lawrence@me0w.org" aria-label="Email Lawrence"><i class="fas fa-envelope" aria-hidden="true"></i><span>lawrence@me0w.org</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Toggle Between Traditional and Simplified Chinese">繁</button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="/js/tw_cn.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/me0w-boot.js"></script><script src="/js/site-stats-guard.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
